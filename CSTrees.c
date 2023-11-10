@@ -93,7 +93,7 @@ CSTree sortInsertSibling(CSTree* t, Element e){
 //Renvoie le premier frere de *t contenant e, le noeud est cree si absent.
 CSTree sortContinue(CSTree* t, Element e){
     if (t == NULL) return NULL;
-    siblingLookup(CSTree t, Element e);
+    siblingLookup(t, e);
 }
 
 /**
