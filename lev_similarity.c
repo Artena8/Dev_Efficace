@@ -71,14 +71,29 @@ int levenshtein(char * S, char * T) {
 
     int max = strlen(S) > strlen(T) ? strlen(S) : strlen(T);
     int distance = (get(a,strlen(S)-1, strlen(T)-1));
-    printf("distance = %d - %d - %f /n", max, distance, ((double)distance/max));
+    //printf("distance = %d - %d - %f /n", max, distance, ((double)distance/max));
     return (1-((double)distance/max))*100;
 }
 
 int main(int argc, char * arv[]) {
-    printf("Q2 - levenshtein: \n");
-    char S[] = "killian";
-    char T[] = "kellian";
-    printf("distance %s-%s : %d \n", S, T, levenshtein(S, T));
-    return 0;
+    printf("Calcul de la similarite orthographique \n");
+
+    if (argc != 3) {
+        printf("Usage: <word1> <word2> \n");
+        return 1; // Code d'erreur
+    }
+
+    printf("Mots fournis :\n");
+    for (int i = 1; i < argc; ++i) {
+        printf("Mot %d: %s\n", i, arv[i]);
+    }
+
+    char S[100];
+    char T[100];
+    strcpy(S, arv[1]);
+    strcpy(T, arv[2]);
+    //printf("distance %s-%s : %d \n", S, T, levenshtein(S, T));
+    printf("Score de similarite orthographique : %d\n",levenshtein(S, T));
+    return levenshtein(S, T);
+    
 }

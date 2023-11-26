@@ -13,3 +13,4 @@ data/news.2012.en.shuffled-norm0-phrase0
 data/news.2012.en.shuffled-norm0-phrase1
 data/news.2012.en.shuffled-norm1-phrase1
 data/vectors-phrase.bin
+bin/frWac_postag_no_phrase_1000_skip_cut100.bin
