@@ -95,5 +95,4 @@ int main(int argc, char * arv[]) {
     //printf("distance %s-%s : %d \n", S, T, levenshtein(S, T));
     printf("Score de similarite orthographique : %d\n",levenshtein(S, T));
     return levenshtein(S, T);
-    
 }
