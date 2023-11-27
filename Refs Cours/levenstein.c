@@ -11,6 +11,7 @@ typedef struct {
 }
 LevArray;
 
+
 //minimum de deux entiers
 int min(int a, int b) {
     return a < b ? a : b;

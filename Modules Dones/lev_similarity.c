@@ -4,12 +4,7 @@
 #include "string.h"
 
 //structure de tableau à deux dimensions, dédié à l'algorithme de Levenshtein
-typedef struct {
-    int lenS;
-    int lenT;
-    int * tab;
-}
-LevArray;
+
 
 //minimum de deux entiers
 int min(int a, int b) {
