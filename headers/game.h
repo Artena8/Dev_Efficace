@@ -73,6 +73,7 @@ typedef struct node {
     Element elem;
     struct node* firstChild;
     struct node* nextSibling;
+    int offset;
 } Node;
 
 typedef Node* CSTree;
@@ -125,6 +126,24 @@ int siblingLookupStatic(StaticTree* st, Element e, int from, int len);
 int siblingDichotomyLookupStatic(StaticTree* st, Element e, int from, int len);
 
 #pragma endregion CSTree
+
+#pragma region Lexico
+/*
+    =======================================
+
+            Prototype des fonctions
+                Lexico 
+
+    =======================================
+*/
+
+CSTree insert(CSTree t, char* mot, int offset);
+
+void fill_array_cells_with_offset(StaticTree* st, CSTree t, int index_for_t, int nSiblings, int* reserved_cells) ;
+
+StaticTree exportStaticTreeWithOffset(CSTree t);
+
+#pragma endregion Lexico
 
 #pragma region NewGame
 /*

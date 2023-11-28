@@ -1,8 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
-#include "../headers/dictionnary.h"
-
+#include "../headers/game.h"
 
 //Q1 Alloue un nouveau noeud pour un CSTree
 CSTree newCSTree(Element elem, CSTree firstChild, CSTree nextSibling) {
@@ -45,23 +44,6 @@ int nChildren(CSTree t) {
     return nSiblings(t->firstChild);
 }
 
-// Insertion d'un mot dans l'arbre
-CSTree insert(CSTree t, char* mot){
-    if (t == NULL){
-        t = malloc(sizeof(Node));
-        t->elem = mot[0];
-        t->firstChild = NULL;
-        t->nextSibling = NULL;          
-        if(mot[0] == '\0') return t;
-    }
-    if (mot[0] == t->elem){
-        t->firstChild = insert(t->firstChild, mot+1);
-    } else {
-        t->nextSibling = insert(t->nextSibling, mot); 
-    }
-    return t;
-}
-
 //Q6 Fonction récursive auxiliaire pour exportStaticTree
 // paramètres:
 //  *st : un static tree partiellement rempli
@@ -91,6 +73,7 @@ void fill_array_cells(StaticTree* st, CSTree t, int index_for_t, int nSiblings, 
     }
     printf("inserting node %c at position %d (%d siblings, %d reserved cells)\n", t->elem, index_for_t, nSiblings, *reserved_cells );
 }
+
 //Crée un arbre statique avec le même contenu que t.
 StaticTree exportStaticTree(CSTree t){
     StaticTree st={NULL, 0};
@@ -200,4 +183,77 @@ int siblingDichotomyLookupStatic(StaticTree* st, Element e, int from, int len){
     }
 
     return NONE;
+}
+
+/*
+    =======================================
+
+            Prototype des fonctions
+                Lexico
+
+    =======================================
+*/
+
+
+// Insertion d'un mot dans l'arbre
+CSTree insert(CSTree t, char* mot, int offset){
+    if (t == NULL){
+        t = malloc(sizeof(Node));
+        t->elem = mot[0];
+        t->firstChild = NULL;
+        t->nextSibling = NULL;      
+        t->offset = (mot[0] == '\0') ? offset : -1;    
+        if(mot[0] == '\0') return t;
+    }
+    if (mot[0] == t->elem){
+        t->firstChild = insert(t->firstChild, mot+1, offset);
+    } else {
+        t->nextSibling = insert(t->nextSibling, mot, offset); 
+    }
+    return t;
+}
+
+// Exportation de l'arbre lexicographique dans un fichier .lex
+void fill_array_cells_with_offset(StaticTree* st, CSTree t, int index_for_t, int nSiblings, int* reserved_cells) {
+    if (t == NULL) return;
+
+    int firstChildIndex;
+    if (t->firstChild != NULL) firstChildIndex = *reserved_cells;
+    else firstChildIndex = NONE;
+
+    st->nodeArray[index_for_t].elem = t->elem;
+    st->nodeArray[index_for_t].firstChild = firstChildIndex;
+    st->nodeArray[index_for_t].nSiblings = nSiblings;
+    st->nodeArray[index_for_t].offset = t->offset;
+
+    *reserved_cells += (t->firstChild != NULL) ? nChildren(t) : 0;
+
+    if (t->firstChild != NULL) {
+        fill_array_cells_with_offset(st, t->firstChild, firstChildIndex, nChildren(t) - 1, reserved_cells);
+    }
+    if (t->nextSibling != NULL) {
+        fill_array_cells_with_offset(st, t->nextSibling, index_for_t + 1, nSiblings - 1, reserved_cells);
+    }
+}
+
+StaticTree exportStaticTreeWithOffset(CSTree t) {
+    StaticTree st = {NULL, 0};
+    int reserved_cells = 0;
+    st.nNodes = size(t);
+    st.nodeArray = malloc(st.nNodes * sizeof(ArrayCellWithOffset));
+
+    if (st.nodeArray == NULL) {
+        printf("Erreur lors de l'allocation mémoire pour l'arbre statique.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    reserved_cells = nSiblings(t);
+    fill_array_cells_with_offset(&st, t, 0, reserved_cells - 1, &reserved_cells);
+
+    if (reserved_cells != st.nNodes && t != NULL) {
+        printf("Erreur lors de la création de l'arbre statique, taille finale incorrecte\n");
+        exit(EXIT_FAILURE);
+    }
+
+    return st;
 }
