@@ -2,15 +2,7 @@
 #include "stdio.h"
 #include "assert.h"
 #include "string.h"
-
-//structure de tableau à deux dimensions, dédié à l'algorithme de Levenshtein
-typedef struct {
-    int lenS;
-    int lenT;
-    int * tab;
-}
-LevArray;
-
+#include "../headers/game.h"
 
 //minimum de deux entiers
 int min(int a, int b) {
@@ -20,20 +12,15 @@ int min(int a, int b) {
 //initialiser un tableau pour des chaînes d'une taille donnée
 LevArray init(int lenS, int lenT) {
     LevArray a;
-    //on stocke les dimensions
     a.lenS = lenS;
     a.lenT = lenT;
-    //allocation d'un tableau (1D) de lenS*lenT entiers
     a.tab = malloc(lenS * lenT * sizeof(int));
-    //on vérifie que l'allocation s'est bien passée
     assert(a.tab != NULL); 
     return a;
-
 }
 
 //set: insérer une valeur dans le tableau
 void set(LevArray a, int indexS, int indexT, int val) {
-    //vérification des indices
     assert(indexS >= 0 && indexS < a.lenS && indexT >= 0 && indexT < a.lenT);
     assert(a.tab!=NULL); 
     a.tab[indexT * a.lenS + indexS] = val;
@@ -74,12 +61,4 @@ int levenshtein(char * S, char * T) {
     int distance = (get(a,strlen(S)-1, strlen(T)-1));
     printf("distance = %d - %d - %f /n", max, distance, ((double)distance/max));
     return (1-((double)distance/max))*100;
-}
-
-int main(int argc, char * arv[]) {
-    printf("Q2 - levenshtein: \n");
-    char S[] = "killian";
-    char T[] = "kellian";
-    printf("distance %s-%s : %d \n", S, T, levenshtein(S, T));
-    return 0;
 }

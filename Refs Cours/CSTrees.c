@@ -1,32 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
+#include "../headers/dictionnary.h"
 
-// Définition du type child Sibling Tree (CSTree)
-
-typedef char Element;
-
-typedef struct node{
-    Element elem;
-    struct node* firstChild;
-    struct node* nextSibling;
-} Node;
-typedef Node* CSTree;
-
-
-typedef struct {
-    Element elem;
-    unsigned int firstChild;
-    unsigned int nSiblings;
-    unsigned int offset;
-} ArrayCell;
-typedef struct {
-    ArrayCell* nodeArray;
-    unsigned int nNodes;
-} StaticTree;
-
-//constante pour firstChild si aucun enfant
-#define NONE -1 
 
 //Q1 Alloue un nouveau noeud pour un CSTree
 CSTree newCSTree(Element elem, CSTree firstChild, CSTree nextSibling) {
@@ -67,6 +43,23 @@ int nSiblings(CSTree child) {
 int nChildren(CSTree t) {
     if (t == NULL || t->firstChild == NULL) return 0;
     return nSiblings(t->firstChild);
+}
+
+// Insertion d'un mot dans l'arbre
+CSTree insert(CSTree t, char* mot){
+    if (t == NULL){
+        t = malloc(sizeof(Node));
+        t->elem = mot[0];
+        t->firstChild = NULL;
+        t->nextSibling = NULL;          
+        if(mot[0] == '\0') return t;
+    }
+    if (mot[0] == t->elem){
+        t->firstChild = insert(t->firstChild, mot+1);
+    } else {
+        t->nextSibling = insert(t->nextSibling, mot); 
+    }
+    return t;
 }
 
 //Q6 Fonction récursive auxiliaire pour exportStaticTree
@@ -208,30 +201,3 @@ int siblingDichotomyLookupStatic(StaticTree* st, Element e, int from, int len){
 
     return NONE;
 }
-
-/* sortie attendue
-
-Q1 newCSTree GO
-Q2 example AB
-Q3 printPrefix: A B C D F G E 
-Q4 size 7
-Q5 nChildren(B) 0
-Q6 exportStaticTree
-elem     	A	B	C	D	E	F	G	
-firstChild	1	-1	-1	5	-1	-1	-1	
-nSiblings	0	3	2	1	0	1	0	
-A
-    B
-    C
-    D
-        F
-        G
-    E
-Q7 siblingLookup 1 0
-Q8 sortContinue
- @ A 0 B C D F G E Y Z 
-Q9 siblingLookupStatic 3 -1
-Q10 siblingDichotomyLookupStatic 3 -1
-
-
-*/
