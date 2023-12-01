@@ -59,6 +59,6 @@ int levenshtein(char * S, char * T) {
 
     int max = strlen(S) > strlen(T) ? strlen(S) : strlen(T);
     int distance = (get(a,strlen(S)-1, strlen(T)-1));
-    printf("distance = %d - %d - %f /n", max, distance, ((double)distance/max));
+    //printf("distance = %d - %d - %f /n", max, distance, ((double)distance/max));
     return (1-((double)distance/max))*100;
 }

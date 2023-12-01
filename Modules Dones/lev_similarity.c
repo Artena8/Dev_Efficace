@@ -21,7 +21,6 @@ int main(int argc, char * arv[]) {
     char T[100];
     strcpy(S, arv[1]);
     strcpy(T, arv[2]);
-    //printf("distance %s-%s : %d \n", S, T, levenshtein(S, T));
     printf("Score de similarite orthographique : %d\n",levenshtein(S, T));
     return levenshtein(S, T);
 }
