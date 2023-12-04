@@ -18,6 +18,7 @@
 // Codes Erreurs
 #define ERROR_FILE_NOT_FOUND 111
 #define ERROR_INVALID_INPUT 222
+#define ERROR_WRITE_FILE 123
 
 
 #pragma endregion Constantes

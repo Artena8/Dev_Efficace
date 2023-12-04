@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <limits.h>
 #include "../headers/game.h"
+#include "../word2vec/src/word2vec.c"
+#include "../word2vec/src/distance.c"
 
 //Q1 Alloue un nouveau noeud pour un CSTree
 CSTree newCSTree(Element elem, CSTree firstChild, CSTree nextSibling) {
@@ -244,7 +246,7 @@ StaticTree exportStaticTreeWithOffset(CSTree t) {
 
     if (st.nodeArray == NULL) {
         printf("Erreur lors de l'allocation mémoire pour l'arbre statique.\n");
-        exit(EXIT_FAILURE);
+        exit(ERROR_WRITE_FILE);
     }
 
     reserved_cells = nSiblings(t);
@@ -252,8 +254,50 @@ StaticTree exportStaticTreeWithOffset(CSTree t) {
 
     if (reserved_cells != st.nNodes && t != NULL) {
         printf("Erreur lors de la création de l'arbre statique, taille finale incorrecte\n");
-        exit(EXIT_FAILURE);
+        exit(ERROR_WRITE_FILE);
     }
 
     return st;
+}
+
+void exportStaticTreeWithOffsetToFile(StaticTreeWithOffset* st, const char* filename) {
+    FILE* file = fopen(filename, "wb");
+
+    if (file == NULL) {
+        perror("Erreur lors de l'ouverture du fichier");
+        exit(ERROR_WRITE_FILE);
+    }
+
+    fwrite(&(st->nNodes), sizeof(int), 1, file);
+    fwrite(st->nodeArray, sizeof(ArrayCellWithOffset), st->nNodes, file);
+    fclose(file);
+}
+
+// Fonction pour extraire le dictionnaire du modèle Word2Vec
+CSTree buildWord2VecDictionaryFromFile(const char *filename) {
+    CSTree dictionary = NULL;
+
+    FILE *file = fopen(filename, "rb");
+    if (!file) {
+        perror("Erreur lors de l'ouverture du fichier Word2Vec");
+        exit(ERROR_FILE_NOT_FOUND);
+    }
+
+    struct vocab_word word;
+    while (fread(&word, sizeof(struct vocab_word), 1, file) == 1) {
+        char *word_str = strdup(word.word);
+        int offset = ftell(file) / sizeof(struct vocab_word); 
+
+        dictionary = insert(dictionary, word_str, offset);
+    }
+
+    fclose(file);
+
+    return dictionary;
+}
+
+// Fonction pour exporter un arbre dans un fichier .lex
+void exportTreeToFile(CSTree t, const char *filename) {
+    StaticTree st = exportStaticTree(t);
+    exportStaticTreeToFile(&st, filename);
 }
