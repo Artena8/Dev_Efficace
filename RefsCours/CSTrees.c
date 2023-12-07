@@ -212,9 +212,7 @@ CSTree buildWord2VecDictionaryFromFile(const char *filename) {
     while (fscanf(file, "%s", word) != EOF){
         int pos = ftell(file);
         dictionary = insert(dictionary, word, pos);
-
     }
-
 
     fclose(file);
     return dictionary;
