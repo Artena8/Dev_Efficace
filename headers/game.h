@@ -13,7 +13,7 @@
 */
 
 // Constantes
-#define NONE -1;
+#define NONE -1
 
 // Codes Erreurs
 #define ERROR_FILE_NOT_FOUND 111
@@ -62,7 +62,7 @@ int levenshtein(char * S, char * T);
     =======================================
 
             Prototype des fonctions
-                CSTREE
+                   CSTREE
 
     =======================================
 */
@@ -84,18 +84,12 @@ typedef struct {
     unsigned int firstChild;
     unsigned int nSiblings;
     unsigned int offset;
-} ArrayCell;
+} ArrayCellWithOffset;
 
 typedef struct {
-    ArrayCell* nodeArray;
+    ArrayCellWithOffset* nodeArray;
     unsigned int nNodes;
-} StaticTree;
-
-// Fonction pour allouer un nouveau noeud pour un CSTree
-CSTree newCSTree(Element elem, CSTree firstChild, CSTree nextSibling);
-
-// Fonction pour construire l'arbre de l'exemple (A(B,C,D(F,G),E))
-CSTree example();
+} StaticTreeWithOffset;
 
 // Fonction pour imprimer l'arbre en ordre préfixe
 void printPrefix(CSTree t);
@@ -107,13 +101,6 @@ int size(CSTree t);
 int nSiblings(CSTree child);
 int nChildren(CSTree t);
 
-// Fonction pour exporter un CSTree vers un StaticTree
-StaticTree exportStaticTree(CSTree t);
-
-// Fonctions d'impression d'un arbre statique
-void printNicePrefixStaticTree(StaticTree* st);
-void printDetailsStaticTree(StaticTree* st);
-
 // Fonction pour rechercher le premier frère de t contenant l'élément e
 CSTree siblingLookup(CSTree t, Element e);
 
@@ -121,10 +108,10 @@ CSTree siblingLookup(CSTree t, Element e);
 CSTree sortContinue(CSTree* t, Element e);
 
 // Fonction pour rechercher l'élément e parmi les éléments consécutifs de t
-int siblingLookupStatic(StaticTree* st, Element e, int from, int len);
+int siblingLookupStatic(StaticTreeWithOffset* st, Element e, int from, int len);
 
 // Fonction pour rechercher l'élément e par dichotomie parmi les éléments consécutifs de t
-int siblingDichotomyLookupStatic(StaticTree* st, Element e, int from, int len);
+int siblingDichotomyLookupStatic(StaticTreeWithOffset* st, Element e, int from, int len);
 
 #pragma endregion CSTree
 
@@ -138,11 +125,23 @@ int siblingDichotomyLookupStatic(StaticTree* st, Element e, int from, int len);
     =======================================
 */
 
+struct vocab_word {
+  long long cn;
+  int *point;
+  char *word, *code, codelen;
+};
+
 CSTree insert(CSTree t, char* mot, int offset);
 
-void fill_array_cells_with_offset(StaticTree* st, CSTree t, int index_for_t, int nSiblings, int* reserved_cells) ;
+void fill_array_cells_with_offset(StaticTreeWithOffset* st, CSTree t, int index_for_t, int nSiblings, int* reserved_cells) ;
 
-StaticTree exportStaticTreeWithOffset(CSTree t);
+CSTree buildWord2VecDictionaryFromFile(const char *filename);
+
+StaticTreeWithOffset exportStaticTreeWithOffset(CSTree t);
+
+void exportTreeToFile(CSTree t, const char *filename);
+
+void exportStaticTreeWithOffsetToFile(StaticTreeWithOffset* st, const char* filename);
 
 #pragma endregion Lexico
 

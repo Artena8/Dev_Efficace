@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "./CSTrees.c"
+#include "../headers/game.h"
 
 int main(int argc, char *argv[]) {
     if (argc != 3) {

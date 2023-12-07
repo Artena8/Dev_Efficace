@@ -14,7 +14,7 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 #include <time.h>
-#include <windows.h>
+#include <pthread.h>
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -41,7 +41,7 @@ int get(LevArray a, int indexS, int indexT) {
 }
 
 //Q2 levenshtein: calcule la distance de levenshtein de deux chaînes
-int levenshtein(char * S, char * T) {
+double levenshtein(char * S, char * T) {
     LevArray a = init(strlen(S), strlen(T));
     
     for (int i=0;i<a.lenS;i++) {
