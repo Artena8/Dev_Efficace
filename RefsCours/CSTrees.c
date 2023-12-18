@@ -193,22 +193,23 @@ CSTree buildWord2VecDictionaryFromFile(const char *filename) {
         exit(ERROR_FILE_NOT_FOUND);
     }
 
+    char word[100];
+
     for (b = 0; b < words; b++) {
-    a = 0;
-    while (1) {
-      vocab[b * max_w + a] = fgetc(f);
-      if (feof(f) || (vocab[b * max_w + a] == ' ')) break;
-      if ((a < max_w) && (vocab[b * max_w + a] != '\n')) a++;
-    }
-    vocab[b * max_w + a] = 0;
-    for (a = 0; a < size; a++) fread(&M[a + b * size], sizeof(float), 1, f);
-    len = 0;
-    for (a = 0; a < size; a++) len += M[a + b * size] * M[a + b * size];
-    len = sqrt(len);
-    for (a = 0; a < size; a++) M[a + b * size] /= len;
+        a = 0;
+        while (1) {
+        vocab[b * max_w + a] = fgetc(f);
+        if (feof(f) || (vocab[b * max_w + a] == ' ')) break;
+        if ((a < max_w) && (vocab[b * max_w + a] != '\n')) a++;
+        }
+        vocab[b * max_w + a] = 0;
+        for (a = 0; a < size; a++) fread(&M[a + b * size], sizeof(float), 1, f);
+        len = 0;
+        for (a = 0; a < size; a++) len += M[a + b * size] * M[a + b * size];
+        len = sqrt(len);
+        for (a = 0; a < size; a++) M[a + b * size] /= len;
     } 
 
-    char word[100];
     while (fscanf(file, "%s", word) != EOF){
         int pos = ftell(file);
         dictionary = insert(dictionary, word, pos);

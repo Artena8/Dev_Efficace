@@ -1,7 +1,7 @@
 /*
     prototype et déclaration des constantes
 */
-
+#ifndef __GNUC__
 #pragma region Constantes
 /*
     =======================================
@@ -158,3 +158,4 @@ void exportStaticTreeWithOffsetToFile(StaticTreeWithOffset* st, const char* file
 
 
 #pragma endregion  NewGame
+#endif
