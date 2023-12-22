@@ -1,7 +1,6 @@
 /*
     prototype et déclaration des constantes
 */
-#ifndef __GNUC__
 #pragma region Constantes
 /*
     =======================================
@@ -143,6 +142,16 @@ void exportTreeToFile(CSTree t, const char *filename);
 
 void exportStaticTreeWithOffsetToFile(StaticTreeWithOffset* st, const char* filename);
 
+void printNicePrefixStaticTree(StaticTreeWithOffset* st);
+
+void printNicePrefixStaticTree_aux(StaticTreeWithOffset* st, int index, int depth);
+
+void printDetailsStaticTree(StaticTreeWithOffset* st);
+
+StaticTreeWithOffset loadStaticTreeWithOffsetFromFile(FILE* file);
+
+int searchWordInStaticTree(StaticTreeWithOffset* st, const char* word);
+
 #pragma endregion Lexico
 
 #pragma region NewGame
@@ -158,4 +167,3 @@ void exportStaticTreeWithOffsetToFile(StaticTreeWithOffset* st, const char* file
 
 
 #pragma endregion  NewGame
-#endif

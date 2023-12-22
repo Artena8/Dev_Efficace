@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h> 
 #include <limits.h>
+#include <math.h>
 #include "../headers/game.h"
 
 //Q1 Alloue un nouveau noeud pour un CSTree
@@ -182,40 +183,63 @@ void exportStaticTreeWithOffsetToFile(StaticTreeWithOffset* st, const char* file
     fclose(file);
 }
 
-// Fonction pour extraire le dictionnaire du modèle Word2Vec
-CSTree buildWord2VecDictionaryFromFile(const char *filename) {
+CSTree buildWord2VecDictionaryFromFile(const char* filename) {
     CSTree dictionary = NULL;
 
-    FILE *file = fopen(filename, "rb");
+    FILE* file = fopen(filename, "rb");
     if (!file) {
         perror("Erreur lors de l'ouverture du fichier Word2Vec");
-        printf("%s",filename);
+        printf("%s", filename);
         exit(ERROR_FILE_NOT_FOUND);
     }
 
-    char word[100];
+    long long words;
+    long long max_w = 80;
+    int size;  // Ajout de la déclaration de size
+    float* M;
+    char* vocab;
 
-    for (b = 0; b < words; b++) {
-        a = 0;
+    fscanf(file, "%lld", &words);
+    fscanf(file, "%d", &size);  // Correction du format de la taille
+
+    vocab = (char*)malloc(words * max_w * sizeof(char));
+    M = (float*)malloc(words * size * sizeof(float));
+
+    if (vocab == NULL || M == NULL) {
+        printf("Erreur lors de l'allocation mémoire pour le dictionnaire Word2Vec\n");
+        exit(EXIT_FAILURE);
+    }
+
+    for (int b = 0; b < words; b++) {
+        int a = 0;
         while (1) {
-        vocab[b * max_w + a] = fgetc(f);
-        if (feof(f) || (vocab[b * max_w + a] == ' ')) break;
-        if ((a < max_w) && (vocab[b * max_w + a] != '\n')) a++;
+            vocab[b * max_w + a] = fgetc(file);
+            if (feof(file) || (vocab[b * max_w + a] == ' ')) break;
+            if ((a < max_w) && (vocab[b * max_w + a] != '\n')) a++;
         }
         vocab[b * max_w + a] = 0;
-        for (a = 0; a < size; a++) fread(&M[a + b * size], sizeof(float), 1, f);
-        len = 0;
-        for (a = 0; a < size; a++) len += M[a + b * size] * M[a + b * size];
-        len = sqrt(len);
-        for (a = 0; a < size; a++) M[a + b * size] /= len;
-    } 
 
-    while (fscanf(file, "%s", word) != EOF){
-        int pos = ftell(file);
-        dictionary = insert(dictionary, word, pos);
+        for (a = 0; a < size; a++)
+            fread(&M[a + b * size], sizeof(float), 1, file);
+
+        float len = 0;
+        for (a = 0; a < size; a++)
+            len += M[a + b * size] * M[a + b * size];
+
+        len = sqrt(len);
+
+        for (a = 0; a < size; a++)
+            M[a + b * size] /= len;
+
+        // Insertion du mot dans l'arbre
+        dictionary = insert(dictionary, vocab + b * max_w, ftell(file));
     }
 
     fclose(file);
+
+    free(vocab);
+    free(M);
+
     return dictionary;
 }
 
@@ -223,5 +247,80 @@ CSTree buildWord2VecDictionaryFromFile(const char *filename) {
 // Fonction pour exporter un arbre dans un fichier .lex
 void exportTreeToFile(CSTree t, const char *filename) {
     StaticTreeWithOffset st = exportStaticTreeWithOffset(t);
+    printDetailsStaticTree(&st);
     exportStaticTreeWithOffsetToFile(&st, filename);
+}
+
+//Fonctions d'impression d'un arbre statique:
+// * version "jolie" avec un noeud par ligne, chaque noeud indenté sous son parent 
+void printNicePrefixStaticTree_aux(StaticTreeWithOffset* st, int index, int depth){
+    if (index==NONE)
+        return;
+    for (int i=0; i<depth; i++)
+        printf("    ");
+    printf("%c\n", st->nodeArray[index].elem);
+    printNicePrefixStaticTree_aux(st, st->nodeArray[index].firstChild, depth+1);
+    if (st->nodeArray[index].nSiblings>0)
+        printNicePrefixStaticTree_aux(st, index+1, depth);    
+}
+
+void printNicePrefixStaticTree(StaticTreeWithOffset* st){
+    if (st->nNodes>0) 
+        printNicePrefixStaticTree_aux(st, 0, 0);
+
+}
+
+void printDetailsStaticTree(StaticTreeWithOffset* st){
+    int i;
+    printf("elem     \t");
+    for (i=0; i< st->nNodes; i++) 
+        printf("%c\t", st->nodeArray[i].elem);
+    printf("\n");
+}
+
+StaticTreeWithOffset loadStaticTreeWithOffsetFromFile(FILE* file) {
+    StaticTreeWithOffset st;
+
+    fread(&(st.nNodes), sizeof(int), 1, file);
+
+    st.nodeArray = malloc(st.nNodes * sizeof(ArrayCellWithOffset));
+    if (st.nodeArray == NULL) {
+        perror("Erreur lors de l'allocation mémoire pour l'arbre statique");
+        exit(EXIT_FAILURE);
+    }
+
+    fread(st.nodeArray, sizeof(ArrayCellWithOffset), st.nNodes, file);
+
+    return st;
+}
+
+// Recherche un mot dans le StaticTree
+int searchWordInStaticTree(StaticTreeWithOffset* st, const char* word) {
+    int currentIndex = 0; // Commence à la racine
+    int i = 0;
+
+    while (word[i] != '\0' && currentIndex != NONE) {
+        int found = 0;
+        for (int j = st->nodeArray[currentIndex].firstChild; j != NONE; j = st->nodeArray[j].nSiblings) {
+            if (st->nodeArray[j].elem == word[i]) {
+                currentIndex = j;
+                found = 1;
+                break;
+            }
+        }
+
+        if (!found) {
+            return 0; // Le mot n'est pas trouvé
+        }
+
+        i++;
+    }
+
+    // Vérifiez si le mot est trouvé et s'il y a un offset valide
+    if (currentIndex != NONE && st->nodeArray[currentIndex].offset != -1) {
+        printf("Offset associé au mot '%s' : %d\n", word, st->nodeArray[currentIndex].offset);
+        return 1; // Le mot est trouvé
+    } else {
+        return 0; // Le mot n'est pas trouvé
+    }
 }

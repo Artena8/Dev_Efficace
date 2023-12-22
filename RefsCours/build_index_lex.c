@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
 
     // Construire le dictionnaire Word2Vec à partir du fichier binaire
     CSTree word2vec_dictionary = buildWord2VecDictionaryFromFile(word2vec_filename);
-
+    
     // Exporter le dictionnaire dans un fichier .lex
     exportTreeToFile(word2vec_dictionary, lex_filename);
 
