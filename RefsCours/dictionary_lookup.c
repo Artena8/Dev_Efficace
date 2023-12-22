@@ -9,29 +9,26 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
-    const char *dictionnary = argv[2];
-    const char *mot_search = argv[1];
+    const char *dictionnary_filename = argv[1];
+    const char *word_to_lookup = argv[2];
 
-    printf("ETAPE 1.\n");
-    // Chargez le StaticTree depuis le fichier
-    StaticTreeWithOffset st = loadStaticTreeWithOffsetFromFile(dictionnary);
-    printDetailsStaticTree(&st);
-    
-    printf("ETAPE 2.\n");
-    // Recherche du mot dans le StaticTree
-    int mot_existe = searchWordInStaticTree(&st, mot_search);
-
-    // Fermez le fichier
-    fclose(dictionnary);
-
-    // Vérifiez le résultat de la recherche
-    if (mot_existe) {
-        printf("Le mot '%s' existe dans le dictionnaire.\n", mot_search);
-    } else {
-        printf("Le mot '%s' n'existe pas dans le dictionnaire.\n", mot_search);
+    // Ouverture du fichier .lex en mode lecture binaire
+    FILE* dictionnary = fopen(dictionnary_filename, "rb");
+    if (!dictionnary) {
+        perror("Erreur lors de l'ouverture du dictionnaire");
+        printf("%s", dictionnary_filename);
+        return EXIT_FAILURE;
     }
 
+    // Chargement de l'arbre statique depuis le fichier .lex
+    StaticTreeWithOffset st = loadStaticTreeWithOffsetFromFile(dictionnary);
+    
+    searchWordInStaticTree(&st, word_to_lookup);
 
+    // Fermeture du fichier
+    fclose(dictionnary);
+
+    // Le reste de votre code ici...
 
     return EXIT_SUCCESS;
 }
