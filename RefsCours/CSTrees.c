@@ -108,22 +108,29 @@ int siblingDichotomyLookupStatic(StaticTreeWithOffset* st, Element e, int from, 
 */
 
 // Insertion d'un mot dans l'arbre
-CSTree insert(CSTree t, char* mot, int offset){
-    if (t == NULL){
+CSTree insert(CSTree t, char* mot, int offset) {
+    if (t == NULL) {
         t = malloc(sizeof(Node));
         t->elem = mot[0];
         t->firstChild = NULL;
-        t->nextSibling = NULL;      
-        t->offset = (mot[0] == '\0') ? offset : -1;    
-        if(mot[0] == '\0') return t;
+        t->nextSibling = NULL;
+        t->offset = (mot[0] == '\0') ? offset : -1;
+        if (mot[0] == '\0') return t;
     }
-    if (mot[0] == t->elem){
-        t->firstChild = insert(t->firstChild, mot+1, offset);
-    } else {
-        t->nextSibling = insert(t->nextSibling, mot, offset); 
-    }
-    return t;
+
+    CSTree dic = t;
+    int i = 0;
+    do {
+        char* lowermot = (mot[i] == '\0') ? tolower(mot[i]) : mot[i];
+        dic = sortContinue(&dic, mot[i]);
+        i++;
+    }while (mot[i] != '\0');
+
+
+    dic->offset = offset;
+    return dic;
 }
+
 
 // Exportation de l'arbre lexicographique dans un fichier .lex
 void fill_array_cells_with_offset(StaticTreeWithOffset* st, CSTree t, int index_for_t, int nSiblings, int* reserved_cells) {
@@ -243,16 +250,11 @@ CSTree buildWord2VecDictionaryFromFile(const char* filename) {
     return dictionary;
 }
 
-
-// Fonction pour exporter un arbre dans un fichier .lex
 void exportTreeToFile(CSTree t, const char *filename) {
     StaticTreeWithOffset st = exportStaticTreeWithOffset(t);
-    printDetailsStaticTree(&st);
     exportStaticTreeWithOffsetToFile(&st, filename);
 }
 
-//Fonctions d'impression d'un arbre statique:
-// * version "jolie" avec un noeud par ligne, chaque noeud indenté sous son parent 
 void printNicePrefixStaticTree_aux(StaticTreeWithOffset* st, int index, int depth){
     if (index==NONE)
         return;
@@ -296,31 +298,14 @@ StaticTreeWithOffset loadStaticTreeWithOffsetFromFile(FILE* file) {
 
 // Recherche un mot dans le StaticTree
 int searchWordInStaticTree(StaticTreeWithOffset* st, const char* word) {
-    int currentIndex = 0; // Commence à la racine
     int i = 0;
-
-    while (word[i] != '\0' && currentIndex != NONE) {
-        int found = 0;
-        for (int j = st->nodeArray[currentIndex].firstChild; j != NONE; j = st->nodeArray[j].nSiblings) {
-            if (st->nodeArray[j].elem == word[i]) {
-                currentIndex = j;
-                found = 1;
-                break;
-            }
-        }
-
-        if (!found) {
-            return 0; // Le mot n'est pas trouvé
-        }
-
+    int from = 1;
+    do {
+        char lowermot = (word[i] == '\0') ? tolower(word[i]) : word[i];
+        from = siblingDichotomyLookupStatic(&st, lowermot, from, NONE);
         i++;
-    }
+    } while (word[i] != '\0' && from != NONE);
 
-    // Vérifiez si le mot est trouvé et s'il y a un offset valide
-    if (currentIndex != NONE && st->nodeArray[currentIndex].offset != -1) {
-        printf("Offset associé au mot '%s' : %d\n", word, st->nodeArray[currentIndex].offset);
-        return 1; // Le mot est trouvé
-    } else {
-        return 0; // Le mot n'est pas trouvé
-    }
+    
+    return 0;   
 }

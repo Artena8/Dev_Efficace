@@ -20,3 +20,4 @@ gcc "./RefsCours/build_index_lex.c" "./RefsCours/CSTrees.c" -I"./headers" -lm -o
 
 
 gcc "./RefsCours/dictionary_lookup.c" "./RefsCours/CSTrees.c" -I"./headers" -lm -o "./RefsCours/dictionary_lookup"
+
