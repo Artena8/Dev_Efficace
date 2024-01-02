@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
     
     // Exporter le dictionnaire dans un fichier .lex
     exportTreeToFile(word2vec_dictionary, lex_filename);
-
+    
     printf("Arbre lexicographique généré et sauvegardé dans %s.\n", lex_filename);
 
 

@@ -22,9 +22,11 @@ int main(int argc, char *argv[]) {
 
     // Chargement de l'arbre statique depuis le fichier .lex
     StaticTreeWithOffset st = loadStaticTreeWithOffsetFromFile(dictionnary);
-    
-    searchWordInStaticTree(&st, word_to_lookup);
+    printf("Dico chargé");
 
+    printNicePrefixStaticTree(&st);
+    int findedword = searchWordInStaticTree(&st, word_to_lookup);
+    printf("Mot trouve : %i\n",findedword);
     // Fermeture du fichier
     fclose(dictionnary);
 

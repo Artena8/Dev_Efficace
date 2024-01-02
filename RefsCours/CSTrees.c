@@ -13,6 +13,7 @@ CSTree newCSTree(Element elem, CSTree firstChild, CSTree nextSibling) {
     t->elem = elem;
     t->firstChild = firstChild;
     t->nextSibling = nextSibling;
+    t->offset = -1;
     return t;
 }
 
@@ -50,14 +51,16 @@ CSTree siblingLookup(CSTree t, Element e){
 
 //Q8 on suppose que les frères de *t sont triés par ordre croissant.
 //   Renvoie le premier frère de *t contenant e, un nouveau noeud est créé si absent
-CSTree sortContinue(CSTree* t, Element e){
+CSTree sortContinue(CSTree* t, Element e, int offset){
     if (*t != NULL && (*t)->elem < e) return sortContinue(&((*t)->nextSibling), e);
     else if (*t != NULL && (*t)->elem == e) return *t;
     else {
-        (*t) = newCSTree(e,NULL, *t);
+        (*t) = newCSTree(e,*t, NULL,offset);
         return *t;
     }
 }
+
+
 
 //Q9 Recherche l’élément e parmi les éléments consécutifs de t aux positions from,..., from+len-1, 
 //    renvoie la position de cet élément s’il existe, NONE sinon.
@@ -77,20 +80,26 @@ int siblingLookupStatic(StaticTreeWithOffset* st, Element e, int from, int len){
 
 //Q10 Comme siblingLookupStatic, mais par dichotomie
 //    cette fonction peut être itérative
-int siblingDichotomyLookupStatic(StaticTreeWithOffset* st, Element e, int from, int len){
-    if (len==NONE) {
-        len = st->nodeArray[from].nSiblings+1;
+int siblingDichotomyLookupStatic(StaticTreeWithOffset* st, Element e, int from, int len) {
+    if (len == NONE) {
+        len = st->nodeArray[from].nSiblings + 1;
     }
 
     while (len > 0) {
         int mid = from + len / 2;
         if (e == st->nodeArray[mid].elem) {
-            return mid;
+            if (st->nodeArray[mid].offset != NONE){
+                return st->nodeArray[mid].offset;
+            } else  {
+                return mid;
+            }
         }
         if (e > st->nodeArray[mid].elem) {
-            len = (from + len) - (mid + 1);
+            // Update len and from for the right half
             from = mid + 1;
+            len = len - (mid - from);
         } else {
+            // Update len and from for the left half
             len = mid - from;
         }
     }
@@ -107,30 +116,47 @@ int siblingDichotomyLookupStatic(StaticTreeWithOffset* st, Element e, int from, 
     =======================================
 */
 
-// Insertion d'un mot dans l'arbre
-CSTree insert(CSTree t, char* mot, int offset) {
-    if (t == NULL) {
-        t = malloc(sizeof(Node));
-        t->elem = mot[0];
-        t->firstChild = NULL;
-        t->nextSibling = NULL;
-        t->offset = (mot[0] == '\0') ? offset : -1;
-        if (mot[0] == '\0') return t;
-    }
+CSTree SortInsert(CSTree t, char lettre, int offset){
+    if (letre == '\0'){
+        return sortContinue(t,'\0',offset);
+    } 
+    return sortContinue(SortInsert(t,lettre + 1, offset),'\0',offset);
+}
 
+// Insertion d'un mot dans l'arbre
+CSTree insert(CSTree t, char* mot, int offset){
     CSTree dic = t;
     int i = 0;
     do {
-        char* lowermot = (mot[i] == '\0') ? tolower(mot[i]) : mot[i];
-        dic = sortContinue(&dic, mot[i]);
+        char lowermot = (mot[i] != '\0') ? tolower(mot[i]) : mot[i];
+
+        // ON CHERCHE SI FIRSTSILBING Y A 
+            // SI OUI ON CONTINUE
+
+            // SI NON ON AJOUTE ET ON CONTINUE
+
+        
+        // ON CHERCHE SI FIRSTCHILD EXISTE
+            // OUI ON FAIT CHERCHE SI FIRSTSILBING Y A 
+                // SI OUI ON CONTINUE
+
+                // SI NON ON AJOUTE ET ON CONTINUE
+
+            // NON ON AJOUTE
+        
+        
+        //dic = sortContinue(&dic, lowermot);
+        if (mot[i] == '\0') {
+            dic->offset = offset;
+            printf("%d\n", dic->offset);
+            return t;
+        }
+        printf("%c", lowermot);
         i++;
-    }while (mot[i] != '\0');
+    } while (1);
 
-
-    dic->offset = offset;
     return dic;
 }
-
 
 // Exportation de l'arbre lexicographique dans un fichier .lex
 void fill_array_cells_with_offset(StaticTreeWithOffset* st, CSTree t, int index_for_t, int nSiblings, int* reserved_cells) {
@@ -240,8 +266,9 @@ CSTree buildWord2VecDictionaryFromFile(const char* filename) {
 
         // Insertion du mot dans l'arbre
         dictionary = insert(dictionary, vocab + b * max_w, ftell(file));
+        //printf("%s %i\n",vocab + b * max_w,ftell(file));
     }
-
+    printPrefix(dictionary);
     fclose(file);
 
     free(vocab);
@@ -269,7 +296,6 @@ void printNicePrefixStaticTree_aux(StaticTreeWithOffset* st, int index, int dept
 void printNicePrefixStaticTree(StaticTreeWithOffset* st){
     if (st->nNodes>0) 
         printNicePrefixStaticTree_aux(st, 0, 0);
-
 }
 
 void printDetailsStaticTree(StaticTreeWithOffset* st){
@@ -301,11 +327,17 @@ int searchWordInStaticTree(StaticTreeWithOffset* st, const char* word) {
     int i = 0;
     int from = 1;
     do {
-        char lowermot = (word[i] == '\0') ? tolower(word[i]) : word[i];
-        from = siblingDichotomyLookupStatic(&st, lowermot, from, NONE);
+        char lowerlettre = (word[i] == '\0') ? tolower(word[i]) : word[i];
+        from = siblingDichotomyLookupStatic(st, lowerlettre, from, NONE);
+        printf("Debug: i=%d, lowerlettre=%c, from=%d\n", i, lowerlettre, from);
         i++;
     } while (word[i] != '\0' && from != NONE);
 
-    
-    return 0;   
+    printf("Debug: Final from=%d\n", from);
+
+    if (from != NONE) {
+        return from;
+    } else {
+        return -1; 
+    }
 }

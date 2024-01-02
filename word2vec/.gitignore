@@ -16,3 +16,5 @@ data/vectors-phrase.bin
 bin/frWac_postag_no_phrase_1000_skip_cut100.bin
 bin/fasttext-fr.bin
 bin/fasttext-fr.stree
+bin/word.bin
+bin/words.bin
