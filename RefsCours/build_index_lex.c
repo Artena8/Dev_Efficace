@@ -15,8 +15,15 @@ int main(int argc, char *argv[]) {
     // Construire le dictionnaire Word2Vec à partir du fichier binaire
     CSTree word2vec_dictionary = buildWord2VecDictionaryFromFile(word2vec_filename);
     
+    StaticTreeWithOffset st =  exportStaticTreeWithOffset(word2vec_dictionary);
+    printf("Dico chargé %c %d\n", st.nodeArray[1].elem, st.nodeArray[1].nSiblings);
+
+    printDetailsStaticTree(&st);
+    int findedword = searchWordInStaticTree(&st, "bains");
+    printf("\nMot trouve : %i\n",st.nodeArray[findedword].nSiblings);
+
     // Exporter le dictionnaire dans un fichier .lex
-    exportTreeToFile(word2vec_dictionary, lex_filename);
+    //exportTreeToFile(word2vec_dictionary, lex_filename);
     
     printf("Arbre lexicographique généré et sauvegardé dans %s.\n", lex_filename);
 

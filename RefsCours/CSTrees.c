@@ -82,16 +82,14 @@ int siblingLookupStatic(StaticTreeWithOffset* st, Element e, int from, int len){
 int siblingDichotomyLookupStatic(StaticTreeWithOffset* st, Element e, int from, int len) {
     if (len == NONE) {
         len = st->nodeArray[from].nSiblings + 1;
+        printf("Lettre %c nsblings : %d\n",st->nodeArray[from].elem, len);
     }
 
     while (len > 0) {
         int mid = from + len / 2;
         if (e == st->nodeArray[mid].elem) {
-            if (st->nodeArray[mid].offset != NONE){
-                return st->nodeArray[mid].offset;
-            } else  {
-                return mid;
-            }
+            printf("Lettre %c enfant : %d\n",st->nodeArray[mid].elem, st->nodeArray[mid].firstChild);
+            return st->nodeArray[mid].firstChild;
         }
         if (e > st->nodeArray[mid].elem) {
             // Update len and from for the right half
@@ -122,13 +120,12 @@ CSTree insert(CSTree t, const char* mot, int offset) {
 
     for (int i = 0; mot[i] != '\0'; i++) {
         if (i == 0) {
-            currentNode = sortContinue(&currentNode, mot[i], -1);
+            currentNode = sortContinue(&currentNode, tolower(mot[i]), -1);
         } else {
-            currentNode = sortContinue(&(currentNode->firstChild), mot[i], -1);
+            currentNode = sortContinue(&(currentNode->firstChild), tolower(mot[i]), -1);
         }
     }
 
-    printf("Mot : %s enregistré, offset %d\n", mot, offset);
     currentNode->firstChild = sortContinue(&(currentNode->firstChild), '\0', offset);
 
     return t;
@@ -245,7 +242,7 @@ CSTree buildWord2VecDictionaryFromFile(const char* filename) {
         dictionary = insert(dictionary, vocab + b * max_w, ftell(file));
         //printf("%s %i\n",vocab + b * max_w,ftell(file));
     }
-    printPrefix(dictionary);
+    //printPrefix(dictionary);
     fclose(file);
 
     free(vocab);
@@ -311,6 +308,7 @@ int searchWordInStaticTree(StaticTreeWithOffset* st, const char* word) {
     } while (word[i] != '\0' && from != NONE);
 
     printf("Debug: Final from=%d\n", from);
+    printf("%i", st->nodeArray[from].offset);
 
     if (from != NONE) {
         return from;
