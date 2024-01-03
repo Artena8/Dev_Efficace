@@ -2,18 +2,19 @@
 #include <stdlib.h>
 #include <string.h> 
 #include <limits.h>
+#include <ctype.h>
 #include <math.h>
 #include "../headers/game.h"
 
 //Q1 Alloue un nouveau noeud pour un CSTree
-CSTree newCSTree(Element elem, CSTree firstChild, CSTree nextSibling) {
+CSTree newCSTree(Element elem, CSTree firstChild, CSTree nextSibling, int offset) {
     CSTree t = malloc(sizeof(Node));
     if (t == NULL) 
         exit(EXIT_FAILURE);
     t->elem = elem;
     t->firstChild = firstChild;
     t->nextSibling = nextSibling;
-    t->offset = -1;
+    t->offset = offset;
     return t;
 }
 
@@ -51,16 +52,14 @@ CSTree siblingLookup(CSTree t, Element e){
 
 //Q8 on suppose que les frères de *t sont triés par ordre croissant.
 //   Renvoie le premier frère de *t contenant e, un nouveau noeud est créé si absent
-CSTree sortContinue(CSTree* t, Element e, int offset){
-    if (*t != NULL && (*t)->elem < e) return sortContinue(&((*t)->nextSibling), e);
+CSTree sortContinue(CSTree* t, Element e, int offset) {
+    if (*t != NULL && (*t)->elem < e) return sortContinue(&((*t)->nextSibling), e, offset);
     else if (*t != NULL && (*t)->elem == e) return *t;
     else {
-        (*t) = newCSTree(e,*t, NULL,offset);
+        (*t) = newCSTree(e,NULL, *t, offset);
         return *t;
     }
 }
-
-
 
 //Q9 Recherche l’élément e parmi les éléments consécutifs de t aux positions from,..., from+len-1, 
 //    renvoie la position de cet élément s’il existe, NONE sinon.
@@ -116,47 +115,25 @@ int siblingDichotomyLookupStatic(StaticTreeWithOffset* st, Element e, int from, 
     =======================================
 */
 
-CSTree SortInsert(CSTree t, char lettre, int offset){
-    if (letre == '\0'){
-        return sortContinue(t,'\0',offset);
-    } 
-    return sortContinue(SortInsert(t,lettre + 1, offset),'\0',offset);
-}
 
-// Insertion d'un mot dans l'arbre
-CSTree insert(CSTree t, char* mot, int offset){
-    CSTree dic = t;
-    int i = 0;
-    do {
-        char lowermot = (mot[i] != '\0') ? tolower(mot[i]) : mot[i];
+// Modifier la déclaration pour que la fonction renvoie void
+CSTree insert(CSTree t, const char* mot, int offset) {
+    CSTree currentNode = t;
 
-        // ON CHERCHE SI FIRSTSILBING Y A 
-            // SI OUI ON CONTINUE
-
-            // SI NON ON AJOUTE ET ON CONTINUE
-
-        
-        // ON CHERCHE SI FIRSTCHILD EXISTE
-            // OUI ON FAIT CHERCHE SI FIRSTSILBING Y A 
-                // SI OUI ON CONTINUE
-
-                // SI NON ON AJOUTE ET ON CONTINUE
-
-            // NON ON AJOUTE
-        
-        
-        //dic = sortContinue(&dic, lowermot);
-        if (mot[i] == '\0') {
-            dic->offset = offset;
-            printf("%d\n", dic->offset);
-            return t;
+    for (int i = 0; mot[i] != '\0'; i++) {
+        if (i == 0) {
+            currentNode = sortContinue(&currentNode, mot[i], -1);
+        } else {
+            currentNode = sortContinue(&(currentNode->firstChild), mot[i], -1);
         }
-        printf("%c", lowermot);
-        i++;
-    } while (1);
+    }
 
-    return dic;
+    printf("Mot : %s enregistré, offset %d\n", mot, offset);
+    currentNode->firstChild = sortContinue(&(currentNode->firstChild), '\0', offset);
+
+    return t;
 }
+
 
 // Exportation de l'arbre lexicographique dans un fichier .lex
 void fill_array_cells_with_offset(StaticTreeWithOffset* st, CSTree t, int index_for_t, int nSiblings, int* reserved_cells) {
@@ -217,7 +194,7 @@ void exportStaticTreeWithOffsetToFile(StaticTreeWithOffset* st, const char* file
 }
 
 CSTree buildWord2VecDictionaryFromFile(const char* filename) {
-    CSTree dictionary = NULL;
+    CSTree dictionary = newCSTree('@', NULL, NULL, -1);
 
     FILE* file = fopen(filename, "rb");
     if (!file) {

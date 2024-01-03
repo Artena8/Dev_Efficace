@@ -104,7 +104,7 @@ int nChildren(CSTree t);
 CSTree siblingLookup(CSTree t, Element e);
 
 // Fonction pour rechercher le premier frère de t contenant e, créer un nouveau noeud s'il est absent
-CSTree sortContinue(CSTree* t, Element e);
+CSTree sortContinue(CSTree* t, Element e, int offset);
 
 // Fonction pour rechercher l'élément e parmi les éléments consécutifs de t
 int siblingLookupStatic(StaticTreeWithOffset* st, Element e, int from, int len);
@@ -130,7 +130,7 @@ struct vocab_word {
   char *word, *code, codelen;
 };
 
-CSTree insert(CSTree t, char* mot, int offset);
+CSTree insert(CSTree t, const char* mot, int offset);
 
 void fill_array_cells_with_offset(StaticTreeWithOffset* st, CSTree t, int index_for_t, int nSiblings, int* reserved_cells) ;
 

@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
     StaticTreeWithOffset st = loadStaticTreeWithOffsetFromFile(dictionnary);
     printf("Dico chargé");
 
-    printNicePrefixStaticTree(&st);
+    printDetailsStaticTree(&st);
     int findedword = searchWordInStaticTree(&st, word_to_lookup);
     printf("Mot trouve : %i\n",findedword);
     // Fermeture du fichier
