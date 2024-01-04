@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
 
     printNicePrefixStaticTree(&st);
 
-    int findedword = searchWordInStaticTree(&st, "carré");
+    int findedword = searchWordInStaticTree(&st, "normoxie");
     printf("\nMot trouve : %i\n",st.nodeArray[findedword].nSiblings);
 
     // Exporter le dictionnaire dans un fichier .lex
