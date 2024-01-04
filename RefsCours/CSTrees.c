@@ -182,6 +182,7 @@ wchar_t convertUtf8(wchar_t *word, int char_length)
         // Gérer les autres longueurs de caractères UTF-8 si nécessaire
         return NULL;
     }
+    return combinedWord;
 }
 
 // Modifier la déclaration pour que la fonction renvoie void
@@ -194,16 +195,16 @@ CSTree insert(CSTree t, const char *mot, int offset)
 
     for (int i = 0; wideMot[i] != '\0'; i++)
     {
-        int char_length = utf8_char_length(*wideMot);
-        wide = convertUtf8(wideMot, char_length);
+        int char_length = utf8_char_length(wideMot[i]);
+        wide = convertUtf8(&wideMot[i], char_length);
 
         if (i == 0)
         {
-            currentNode = sortContinue(&currentNode, towlower(wideMot[i]), -1);
+            currentNode = sortContinue(&currentNode, towlower(wide), -1);
         }
         else
         {
-            currentNode = sortContinue(&(currentNode->firstChild), towlower(wideMot[i]), -1);
+            currentNode = sortContinue(&(currentNode->firstChild), towlower(wide), -1);
         }
         i += char_length - 1;
     }
@@ -345,7 +346,7 @@ CSTree buildWord2VecDictionaryFromFile(const char *filename)
         exit(EXIT_FAILURE);
     }
 
-    for (int b = 0; b < 100; b++)
+    for (int b = 0; b < words; b++)
     {
         int a = 0;
         while (1)

@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
     StaticTreeWithOffset st =  exportStaticTreeWithOffset(word2vec_dictionary);
     printf("Dico chargé %c %d\n", st.nodeArray[1].elem, st.nodeArray[1].nSiblings);
 
-    printNicePrefixStaticTree(&st);
+    //printNicePrefixStaticTree(&st);
 
     int findedword = searchWordInStaticTree(&st, "normoxie");
     printf("\nMot trouve : %i\n",st.nodeArray[findedword].nSiblings);
