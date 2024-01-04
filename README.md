@@ -18,6 +18,9 @@ Dossier pour travailler de manière expérimentale sur la SAE - moteur de score
 
 gcc "./RefsCours/build_index_lex.c" "./RefsCours/CSTrees.c" -I"./headers" -lm -o "./RefsCours/build_index_lex"
 
-
 gcc "./RefsCours/dictionary_lookup.c" "./RefsCours/CSTrees.c" -I"./headers" -lm -o "./RefsCours/dictionary_lookup"
 
+
+./gcc.exe "U:\GITHUB\Dev_Efficace/RefsCours/dictionary_lookup.c" "U:\GITHUB\Dev_Efficace/RefsCours/CSTrees.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace/RefsCours/dictionary_lookup"
+
+./gcc.exe "U:\GITHUB\Dev_Efficace/RefsCours/build_index_lex.c" "U:\GITHUB\Dev_Efficace/RefsCours/CSTrees.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace/RefsCours/build_index_lex"

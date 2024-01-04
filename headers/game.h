@@ -67,7 +67,7 @@ int levenshtein(char * S, char * T);
 */
 
 // Définition du type child Sibling Tree (CSTree)
-typedef char Element;
+typedef wchar_t Element;
 
 typedef struct node {
     Element elem;
@@ -131,6 +131,8 @@ struct vocab_word {
 };
 
 CSTree insert(CSTree t, const char* mot, int offset);
+
+void convertUtf8ToWideChar(const char* utf8Str, wchar_t* wideCharStr);
 
 void fill_array_cells_with_offset(StaticTreeWithOffset* st, CSTree t, int index_for_t, int nSiblings, int* reserved_cells) ;
 

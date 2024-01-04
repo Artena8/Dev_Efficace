@@ -4,6 +4,7 @@
 #include <limits.h>
 #include <ctype.h>
 #include <math.h>
+#include <wchar.h>
 #include "../headers/game.h"
 
 //Q1 Alloue un nouveau noeud pour un CSTree
@@ -117,18 +118,49 @@ int siblingDichotomyLookupStatic(StaticTreeWithOffset* st, Element e, int from, 
 // Modifier la déclaration pour que la fonction renvoie void
 CSTree insert(CSTree t, const char* mot, int offset) {
     CSTree currentNode = t;
+    wchar_t wideMot[50];
 
-    for (int i = 0; mot[i] != '\0'; i++) {
+    convertUtf8ToWideChar(mot,wideMot);
+    
+    for (int i = 0; wideMot[i] != '\0'; i++) {
+
         if (i == 0) {
-            currentNode = sortContinue(&currentNode, tolower(mot[i]), -1);
+            currentNode = sortContinue(&currentNode, towlower(wideMot[i]), -1);
         } else {
-            currentNode = sortContinue(&(currentNode->firstChild), tolower(mot[i]), -1);
+            currentNode = sortContinue(&(currentNode->firstChild), towlower(wideMot[i]), -1);
         }
     }
 
     currentNode->firstChild = sortContinue(&(currentNode->firstChild), '\0', offset);
 
     return t;
+}
+
+void convertUtf8ToWideChar(const char* utf8Str, wchar_t* wideCharStr) {
+    int i = 0;
+    int j = 0;
+    char tempcarac[4] = {0};
+
+    while (utf8Str[i] != '\0') {
+        if ((utf8Str[i] & 0xC0) == 0xC0) {
+            int k;
+            for (k = 0; (utf8Str[i] & (0x80 >> k)) != 0; k++) {
+                tempcarac[k] = utf8Str[i + k];
+            }
+            tempcarac[k] = '\0';
+            i += k - 1;
+            mbstate_t state = {0};
+            wchar_t wc;
+            mbrtowc(&wc, tempcarac, k, &state);
+            wideCharStr[j++] = wc;
+        } else {
+            wideCharStr[j++] = utf8Str[i];
+        }
+        i++;
+    }
+
+    wideCharStr[j] = L'\0';
+    wprintf(L"%ls\n", wideCharStr);
 }
 
 
