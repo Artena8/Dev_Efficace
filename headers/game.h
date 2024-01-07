@@ -52,7 +52,7 @@ void set(LevArray a, int indexS, int indexT, int val);
 int get(LevArray a, int indexS, int indexT);
 
 // Fonction pour calculer la distance de Levenshtein entre deux chaînes
-int levenshtein(char * S, char * T);
+double levenshtein(char * S, char * T);
 
 #pragma endregion Levenshtein
 

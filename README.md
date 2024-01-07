@@ -24,3 +24,5 @@ gcc "./RefsCours/dictionary_lookup.c" "./RefsCours/CSTrees.c" -I"./headers" -lm 
 ./gcc.exe "U:\GITHUB\Dev_Efficace/RefsCours/dictionary_lookup.c" "U:\GITHUB\Dev_Efficace/RefsCours/CSTrees.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace/RefsCours/dictionary_lookup"
 
 ./gcc.exe "U:\GITHUB\Dev_Efficace/RefsCours/build_index_lex.c" "U:\GITHUB\Dev_Efficace/RefsCours/CSTrees.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace/RefsCours/build_index_lex"
+
+.\gcc.exe "U:\GITHUB\Dev_Efficace\ModulesDones\lev_similarity.c" "U:\GITHUB\Dev_Efficace\ModulesDones\levenstein.c" "U:\GITHUB\Dev_Efficace/RefsCours/CSTrees.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace\ModulesDones\lev_similarity.exe"
