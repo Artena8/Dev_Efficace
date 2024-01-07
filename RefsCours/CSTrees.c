@@ -87,16 +87,23 @@ int siblingLookupStatic(StaticTreeWithOffset *st, Element e, int from, int len)
     if (len == NONE)
     {
         len = st->nodeArray[from].nSiblings + 1;
+        //printf("Lettre %c nsblings : %d\n", st->nodeArray[from].elem, len);
     }
 
     for (int i = from; i < from + len; i++)
     {
+        //printf("searched : %c = %c ", st->nodeArray[i].elem, e);
+        //printf(" equal : %i\n", e == st->nodeArray[i].elem);
         if (st->nodeArray[i].elem == e)
-            return i;
+        {
+            //printf("Lettre %c enfant : %d\n", st->nodeArray[i].elem, st->nodeArray[i].firstChild);
+            return st->nodeArray[i].firstChild;
+        }
     }
 
     return NONE;
 }
+
 
 // Q10 Comme siblingLookupStatic, mais par dichotomie
 //     cette fonction peut être itérative
@@ -111,6 +118,8 @@ int siblingDichotomyLookupStatic(StaticTreeWithOffset *st, Element e, int from, 
     while (len > 0)
     {
         int mid = from + len / 2;
+        printf("searched : %c\n", st->nodeArray[from].elem);
+        printf("searched : %i\n", e == st->nodeArray[mid].elem);
         if (e == st->nodeArray[mid].elem)
         {
             printf("Lettre %c enfant : %d\n", st->nodeArray[mid].elem, st->nodeArray[mid].firstChild);
@@ -440,20 +449,21 @@ int searchWordInStaticTree(StaticTreeWithOffset *st, const char *word)
 {
     int i = 0;
     int from = 1;
+    wchar_t wide; 
     do
     {
-        char lowerlettre = (word[i] == '\0') ? tolower(word[i]) : word[i];
-        from = siblingDichotomyLookupStatic(st, lowerlettre, from, NONE);
-        printf("Debug: i=%d, lowerlettre=%c, from=%d\n", i, lowerlettre, from);
+        mbstowcs(&wide, &word[i], 1);
+        from = siblingLookupStatic(st, wide, from, NONE);
+        //printf("Debug: i=%d, lowerlettre=%c, from=%d\n", i, wide, from);
         i++;
     } while (word[i] != '\0' && from != NONE);
 
-    printf("Debug: Final from=%d\n", from);
-    printf("%i", st->nodeArray[from].offset);
+    //printf("Debug: Final from=%d\n", from);
+    //printf("%i", st->nodeArray[from].offset);
 
     if (from != NONE)
     {
-        return from;
+        return st->nodeArray[from].offset;
     }
     else
     {

@@ -18,17 +18,17 @@ int main(int argc, char *argv[]) {
     CSTree word2vec_dictionary = buildWord2VecDictionaryFromFile(word2vec_filename);
     
     StaticTreeWithOffset st =  exportStaticTreeWithOffset(word2vec_dictionary);
-    printf("Dico chargé %c %d\n", st.nodeArray[1].elem, st.nodeArray[1].nSiblings);
+    //printf("Dico chargé %c %d\n", st.nodeArray[1].elem, st.nodeArray[1].nSiblings);
 
     //printNicePrefixStaticTree(&st);
 
-    int findedword = searchWordInStaticTree(&st, "normoxie");
-    printf("\nMot trouve : %i\n",st.nodeArray[findedword].nSiblings);
+    //int findedword = searchWordInStaticTree(&st, "normoxie");
+    //printf("\nMot trouve : %i\n",st.nodeArray[findedword].nSiblings);
 
     // Exporter le dictionnaire dans un fichier .lex
-    //exportTreeToFile(word2vec_dictionary, lex_filename);
+    exportTreeToFile(word2vec_dictionary, lex_filename);
     
-    printf("Arbre lexicographique généré et sauvegardé dans %s.\n", lex_filename);
+    printf("Arbre lexicographique dans %s.\n", lex_filename);
 
 
     return EXIT_SUCCESS;
