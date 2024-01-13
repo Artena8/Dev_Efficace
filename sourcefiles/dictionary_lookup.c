@@ -4,9 +4,18 @@
 #include "../headers/game.h"
 
 int main(int argc, char *argv[]) {
-    if (argc != 3) {
-        fprintf(stderr, "Usage: %s <fichier_lex.lex> <mot>\n", argv[0]);
-        return EXIT_FAILURE;
+    if (argc == 1){
+        printf("Ce programme a ete code par la team FC RATS:\n -BREDEAU Kellian\n-CHEVALIER Helena\n-COUTELLIER Loelia\n-DESSERTENNE Leo\nLancement d'une fonction de test avec les arguments :\n");
+        //Fonction de test minimaliste
+    }
+    else if (argc==2 && strcmp("--help", argv[1])==0){
+        printf("Usage: exec <dico.lex> <word>\n");
+        printf("where dico.lex le dictionnaire lexicogrpahique et word le mot a chercher dans le dictionnaire\n");
+        exit(0);
+    }
+    else if (argc != 3) {
+        printf("Mauvais usage de la fonction \n");
+        return ERROR_INVALID_INPUT; // Code d'erreur personnalisé
     }
 
     const char *dictionnary_filename = argv[1];

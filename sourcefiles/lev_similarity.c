@@ -5,14 +5,17 @@
 #include "../headers/game.h"
 
 int main(int argc, char * arv[]) {
-    printf("Calcul de la similarite orthographique \n");
-
     if (argc == 1){
-        printf("FC RATS NOMS A DEFINIR \n");
+        printf("Ce programme a ete code par la team FC RATS:\n -BREDEAU Kellian\n-CHEVALIER Helena\n-COUTELLIER Loelia\n-DESSERTENNE Leo\nLancement d'une fonction de test avec les arguments :\n");
+        //Fonction de test minimaliste
     }
-
+    else if (argc==2 && strcmp("--help", argv[1])==0){
+        printf("Usage: exec <word1> <word2>\n");
+        printf("where word1 mot a comparer, word2 le deuxieme mot a comparer\n");
+        exit(0);
+    }
     else if (argc != 3) {
-        printf("Usage: <dico.lex> <word1> <word2> \n");
+        printf("Mauvais usage de la fonction \n");
         return ERROR_INVALID_INPUT; // Code d'erreur personnalisé
     }
 
