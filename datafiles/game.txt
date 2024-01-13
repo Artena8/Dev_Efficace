@@ -1,4 +1,4 @@
-chèvre;lèvre
-lapin;cri;normoxie
-chèvre:5932915;lèvre:11920592;lapin:4888444;cri:5503223;normoxie:73451952
-chèvre,lèvre,0.67;lapin,chèvre,1.#R;lapin,lèvre,-1.#R;cri,chèvre,1.#R;cri,lèvre,-1.#R;cri,lapin,-1.#R;normoxie,chèvre,1.#R;normoxie,lèvre,-1.#R;normoxie,lapin,-1.#R;normoxie,cri,-1.#R;
+normoxie;attribution
+cri;lapin
+normoxie:73451952;attribution:4562942;cri:5503223;lapin:4888444
+normoxie,attribution,0.18;cri,normoxie,0.00;cri,attribution,0.00;lapin,normoxie,0.00;lapin,attribution,0.00;lapin,cri,0.00;

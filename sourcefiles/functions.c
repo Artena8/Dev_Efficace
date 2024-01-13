@@ -364,7 +364,7 @@ double sigmoid(double x)
 }
 
 double calculScalaire(int offsetword1,int offsetword2){ 
-    FILE *file = fopen("word2vec/bin/words.bin", "rb");
+    FILE *file = fopen("datafiles/words.bin", "rb");
     if (!file)
     {
         perror("Erreur lors de l'ouverture du fichier Word2Vec");
@@ -400,8 +400,8 @@ double calculScalaire(int offsetword1,int offsetword2){
     len2 = sqrt(len2); //Norme V
     for (a = 0; a < MAX_SIZE; a++) produit += vecteur1[a] * vecteur2[a];
 
-    printf("len1: %f, len2: %f produit: %f\n", len1, len2, produit);
-    printf("score: %0.2f\n", (produit / (len1 * len2)));
+    //printf("len1: %f, len2: %f produit: %f\n", len1, len2, produit);
+    //printf("score: %0.2f\n", (produit / (len1 * len2)));
     return produit / (len1 * len2);
 }
 
@@ -573,7 +573,7 @@ void addWordToFile(char *filename, char *word1, int offset1) {
         token = strtok(NULL, ";");
     }
 
-    FILE* dictionnary = fopen("./RefsCours/output/dic.lex", "rb");
+    FILE* dictionnary = fopen("./datafiles/dic.lex", "rb");
     if (!dictionnary) {
         perror("Erreur lors de l'ouverture du dictionnaire");
         exit(EXIT_FAILURE);

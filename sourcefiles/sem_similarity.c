@@ -4,7 +4,7 @@
 #include "string.h"
 #include "../headers/game.h"
 
-int main(int argc, char * arv[]) {
+int main(int argc, char * argv[]) {
     if (argc == 1){
         printf("Ce programme a ete code par la team FC RATS:\n -BREDEAU Kellian\n-CHEVALIER Helena\n-COUTELLIER Loelia\n-DESSERTENNE Leo\nLancement d'une fonction de test avec les arguments :\n");
         //Fonction de test minimaliste
@@ -19,9 +19,9 @@ int main(int argc, char * arv[]) {
         return ERROR_INVALID_INPUT; // Code d'erreur personnalisé
     }
 
-    const char *dictionnary_filename = arv[1];
-    char *word1 = arv[2];
-    char *word2 = arv[3];
+    const char *dictionnary_filename = argv[1];
+    char *word1 = argv[2];
+    char *word2 = argv[3];
 
     FILE* dictionnary = fopen(dictionnary_filename, "rb");
     if (!dictionnary) {
