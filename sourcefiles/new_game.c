@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "./headers/game.h"
+#include "../headers/game.h"
 
 int main(int argc, char *arv[]) {
     if (argc == 1){

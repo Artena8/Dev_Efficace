@@ -470,7 +470,12 @@ double levenshtein(char * S, char * T) {
 }
 
 double calculSimilarity(char *word1, char *word2, int offset1, int offset2){
-    return max(levenshtein(word1,word2),calculScalaire(offset1,offset2));
+    double score;
+    double calcul = max(levenshtein(word1,word2),calculScalaire(offset1,offset2));
+    if (calcul >= 0 && calcul <= 1){
+        return calcul;
+    }
+    return score;
 }
 
 void writeToFileBeginGame(char *filename, char *word1, char *word2, int offset1, int offset2) {
@@ -480,7 +485,7 @@ void writeToFileBeginGame(char *filename, char *word1, char *word2, int offset1,
     fprintf(file, "\n\n");
     fprintf(file, "%s:%i;%s:%i", word1, offset1,word2,offset2);
     fprintf(file, "\n");
-    fprintf(file, "%s,%s,%0.2f;", word1, word2, levenshtein(word1,word2));
+    fprintf(file, "%s,%s,%0.2f;", word1, word2, calculSimilarity(word1,word2,offset1,offset2));
 
     fclose(file);
 }

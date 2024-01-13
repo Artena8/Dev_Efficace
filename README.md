@@ -14,19 +14,24 @@ Dossier pour travailler de manière expérimentale sur la SAE - moteur de score
     ```
 - 
 
-gcc "./sourcefiles/build_index_lex.c" "./sourcefiles/CSTrees.c" -I"./headers" -lm -o "./sourcefiles/build_index_lex"
+## Creer le dictionnaire de l'arbre lexicographique (build_index_lex)
+gcc "./sourcefiles/build_index_lex.c" "./sourcefiles/functions.c" -I"./headers" -lm -o "./exec_WINDOWS/build_index_lex"
 
-gcc "./sourcefiles/dictionary_lookup.c" "./sourcefiles/CSTrees.c" -I"./headers" -lm -o "./sourcefiles/dictionary_lookup"
+./gcc.exe "U:\GITHUB\Dev_Efficace/sourcefiles/build_index_lex.c" "U:\GITHUB\Dev_Efficace/sourcefiles/functions.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace/exec_WINDOWS/build_index_lex"
 
+## Rechercher si un mot existe dans le dictionnaire (dictionnary_lookup)
+gcc "./sourcefiles/dictionary_lookup.c" "./sourcefiles/functions.c" -I"./headers" -lm -o "./exec_WINDOWS/dictionary_lookup"
 
-./gcc.exe "U:\GITHUB\Dev_Efficace/RefsCours/dictionary_lookup.c" "U:\GITHUB\Dev_Efficace/RefsCours/CSTrees.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace/RefsCours/dictionary_lookup"
+./gcc.exe "U:\GITHUB\Dev_Efficace/sourcefiles/dictionary_lookup.c" "U:\GITHUB\Dev_Efficace/sourcefiles/functions.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace/exec_WINDOWS/dictionary_lookup"
 
-./gcc.exe "U:\GITHUB\Dev_Efficace/RefsCours/build_index_lex.c" "U:\GITHUB\Dev_Efficace/RefsCours/CSTrees.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace/RefsCours/build_index_lex"
+## Calculer la similarite orthographique (lev_similarity)
+.\gcc.exe "U:\GITHUB\Dev_Efficace\sourcefiles\lev_similarity.c" "U:\GITHUB\Dev_Efficace/sourcefiles/functions.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace\exec_WINDOWS\lev_similarity.exe"
 
-.\gcc.exe "U:\GITHUB\Dev_Efficace\ModulesDones\lev_similarity.c" "U:\GITHUB\Dev_Efficace\ModulesDones\levenstein.c" "U:\GITHUB\Dev_Efficace/RefsCours/CSTrees.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace\ModulesDones\lev_similarity.exe"
+## Calculer la similarite semantique (sem_similarity)
+./gcc.exe "U:\GITHUB\Dev_Efficace/sourcefiles/sem_similarity.c" "U:\GITHUB\Dev_Efficace/sourcefiles/functions.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace/exec_WINDOWS/sem_similarity"
 
-./gcc.exe "U:\GITHUB\Dev_Efficace/RefsCours/sem_similarity.c" "U:\GITHUB\Dev_Efficace/RefsCours/CSTrees.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace/RefsCours/sem_similarity"
+## Creer le fichier de partie (new_game)
+./gcc.exe "U:\GITHUB\Dev_Efficace/sourcefiles/new_game.c" "U:\GITHUB\Dev_Efficace/sourcefiles/functions.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace/exec_WINDOWS/new_game"
 
-./gcc.exe "U:\GITHUB\Dev_Efficace/new_game.c" "U:\GITHUB\Dev_Efficace/RefsCours/CSTrees.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace/new_game"
-
-./gcc.exe "U:\GITHUB\Dev_Efficace/add_word.c" "U:\GITHUB\Dev_Efficace/RefsCours/CSTrees.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace/add_word"
+## Ajouter un mot à la partie (add_word)
+./gcc.exe "U:\GITHUB\Dev_Efficace/sourcefiles/add_word.c" "U:\GITHUB\Dev_Efficace/sourcefiles/functions.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace/exec_WINDOWS/add_word"

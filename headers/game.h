@@ -104,7 +104,6 @@ CSTree sortContinue(CSTree* t, Element e, int offset);
 // Fonction pour rechercher l'élément e parmi les éléments consécutifs de t
 int siblingLookupStatic(StaticTreeWithOffset* st, Element e, int from, int len);
 
-
 #pragma endregion CSTree
 
 #pragma region Lexico
