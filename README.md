@@ -14,11 +14,9 @@ Dossier pour travailler de manière expérimentale sur la SAE - moteur de score
     ```
 - 
 
-/RefsCours/build_index_lex ./word2vec/bin/fasttext-fr.bin ./RefsCours/output/dic.lex
+gcc "./sourcefiles/build_index_lex.c" "./sourcefiles/CSTrees.c" -I"./headers" -lm -o "./sourcefiles/build_index_lex"
 
-gcc "./RefsCours/build_index_lex.c" "./RefsCours/CSTrees.c" -I"./headers" -lm -o "./RefsCours/build_index_lex"
-
-gcc "./RefsCours/dictionary_lookup.c" "./RefsCours/CSTrees.c" -I"./headers" -lm -o "./RefsCours/dictionary_lookup"
+gcc "./sourcefiles/dictionary_lookup.c" "./sourcefiles/CSTrees.c" -I"./headers" -lm -o "./sourcefiles/dictionary_lookup"
 
 
 ./gcc.exe "U:\GITHUB\Dev_Efficace/RefsCours/dictionary_lookup.c" "U:\GITHUB\Dev_Efficace/RefsCours/CSTrees.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace/RefsCours/dictionary_lookup"
@@ -26,3 +24,9 @@ gcc "./RefsCours/dictionary_lookup.c" "./RefsCours/CSTrees.c" -I"./headers" -lm 
 ./gcc.exe "U:\GITHUB\Dev_Efficace/RefsCours/build_index_lex.c" "U:\GITHUB\Dev_Efficace/RefsCours/CSTrees.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace/RefsCours/build_index_lex"
 
 .\gcc.exe "U:\GITHUB\Dev_Efficace\ModulesDones\lev_similarity.c" "U:\GITHUB\Dev_Efficace\ModulesDones\levenstein.c" "U:\GITHUB\Dev_Efficace/RefsCours/CSTrees.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace\ModulesDones\lev_similarity.exe"
+
+./gcc.exe "U:\GITHUB\Dev_Efficace/RefsCours/sem_similarity.c" "U:\GITHUB\Dev_Efficace/RefsCours/CSTrees.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace/RefsCours/sem_similarity"
+
+./gcc.exe "U:\GITHUB\Dev_Efficace/new_game.c" "U:\GITHUB\Dev_Efficace/RefsCours/CSTrees.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace/new_game"
+
+./gcc.exe "U:\GITHUB\Dev_Efficace/add_word.c" "U:\GITHUB\Dev_Efficace/RefsCours/CSTrees.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace/add_word"

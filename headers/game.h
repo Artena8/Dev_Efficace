@@ -13,12 +13,13 @@
 
 // Constantes
 #define NONE -1
+#define MAX_SIZE 300
+#define MAX_LINE_LENGTH 5000
 
 // Codes Erreurs
 #define ERROR_FILE_NOT_FOUND 111
 #define ERROR_INVALID_INPUT 222
 #define ERROR_WRITE_FILE 123
-
 
 #pragma endregion Constantes
 
@@ -90,9 +91,6 @@ typedef struct {
     unsigned int nNodes;
 } StaticTreeWithOffset;
 
-// Fonction pour imprimer l'arbre en ordre préfixe
-void printPrefix(CSTree t);
-
 // Fonction pour compter le nombre de noeuds dans l'arbre t
 int size(CSTree t);
 
@@ -100,17 +98,12 @@ int size(CSTree t);
 int nSiblings(CSTree child);
 int nChildren(CSTree t);
 
-// Fonction pour rechercher le premier frère de t contenant l'élément e
-CSTree siblingLookup(CSTree t, Element e);
-
 // Fonction pour rechercher le premier frère de t contenant e, créer un nouveau noeud s'il est absent
 CSTree sortContinue(CSTree* t, Element e, int offset);
 
 // Fonction pour rechercher l'élément e parmi les éléments consécutifs de t
 int siblingLookupStatic(StaticTreeWithOffset* st, Element e, int from, int len);
 
-// Fonction pour rechercher l'élément e par dichotomie parmi les éléments consécutifs de t
-int siblingDichotomyLookupStatic(StaticTreeWithOffset* st, Element e, int from, int len);
 
 #pragma endregion CSTree
 
@@ -132,8 +125,6 @@ struct vocab_word {
 
 CSTree insert(CSTree t, const char* mot, int offset);
 
-void convertUtf8ToWideChar(const char* utf8Str, wchar_t* wideCharStr);
-
 void fill_array_cells_with_offset(StaticTreeWithOffset* st, CSTree t, int index_for_t, int nSiblings, int* reserved_cells) ;
 
 CSTree buildWord2VecDictionaryFromFile(const char *filename);
@@ -144,15 +135,17 @@ void exportTreeToFile(CSTree t, const char *filename);
 
 void exportStaticTreeWithOffsetToFile(StaticTreeWithOffset* st, const char* filename);
 
-void printNicePrefixStaticTree(StaticTreeWithOffset* st);
-
-void printNicePrefixStaticTree_aux(StaticTreeWithOffset* st, int index, int depth);
-
-void printDetailsStaticTree(StaticTreeWithOffset* st);
-
 StaticTreeWithOffset loadStaticTreeWithOffsetFromFile(FILE* file);
 
 int searchWordInStaticTree(StaticTreeWithOffset* st, const char* word);
+
+double calculScalaire(int offsetword1,int offsetword2);
+
+double sigmoid(double x);
+
+double max(double a, double b);
+
+double calculSimilarity(char *word1, char *word2, int offset1, int offset2);
 
 #pragma endregion Lexico
 
@@ -166,6 +159,8 @@ int searchWordInStaticTree(StaticTreeWithOffset* st, const char* word);
     =======================================
 */
 
+void writeToFileBeginGame(char *filename, char *word1, char *word2, int offset1, int offset2);
 
+void addWordToFile(char *filename, char *word1, int offset1);
 
 #pragma endregion  NewGame
