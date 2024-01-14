@@ -1,4 +1,4 @@
-cri;lapin
-lèvre
-cri:5503223;lapin:4888444;lèvre:11920592
-cri,lapin,0.00;lèvre,cri,0.20;lèvre,lapin,0.00;
+chien;chat
+lapin
+chien:1285805;chat:1670324;lapin:4887244
+chien,chat,0.73;lapin,chien,0.60;lapin,chat,0.64;

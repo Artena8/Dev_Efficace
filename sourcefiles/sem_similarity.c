@@ -5,9 +5,16 @@
 #include "../headers/game.h"
 
 int main(int argc, char * argv[]) {
+    const char *dictionnary_filename;
+    char *word1;
+    char *word2;
+
     if (argc == 1){
         printf("Ce programme a ete code par la team FC RATS:\n -BREDEAU Kellian\n-CHEVALIER Helena\n-COUTELLIER Loelia\n-DESSERTENNE Leo\nLancement d'une fonction de test avec les arguments :\n");
-        //Fonction de test minimaliste
+        dictionnary_filename = "./datafiles/dic.lex";
+        word1 = "chien";
+        word2 = "chat"; 
+        printf("%s %s %s\n",dictionnary_filename,word1,word2);
     }
     else if (argc==2 && strcmp("--help", argv[1])==0){
         printf("Usage: exec <dico.lex> <word1> <word2>\n");
@@ -18,10 +25,11 @@ int main(int argc, char * argv[]) {
         printf("Mauvais usage de la fonction \n");
         return ERROR_INVALID_INPUT; // Code d'erreur personnalisé
     }
-
-    const char *dictionnary_filename = argv[1];
-    char *word1 = argv[2];
-    char *word2 = argv[3];
+    else {
+        dictionnary_filename = argv[1];
+        word1 = argv[2];
+        word2 = argv[3];
+    }
 
     FILE* dictionnary = fopen(dictionnary_filename, "rb");
     if (!dictionnary) {
@@ -45,5 +53,5 @@ int main(int argc, char * argv[]) {
 
     printf("Score de similarite semantique : %0.2f\n",calculScalaire(offsetword1, offsetword2));
 
-    return 1;
+    return 0;
 }

@@ -12,7 +12,7 @@
 /*
     =======================================
 
-            Prototype des fonctions
+            fonctions
             Construction d'un CSTREE
 
     =======================================
@@ -128,7 +128,7 @@ int siblingLookupStatic(StaticTreeWithOffset *st, Element e, int from, int len){
 /*
     =======================================
 
-            Prototype des fonctions
+            fonctions
                 Lexico
 
     =======================================
@@ -364,21 +364,13 @@ CSTree buildWord2VecDictionaryFromFile(const char *filename)
                 a++;
         }
         vocab[b * max_w + a] = 0;
+        
+        dictionary = insert(dictionary, vocab + b * max_w, ftell(file));
 
         for (a = 0; a < size; a++)
             fread(&M[a + b * size], sizeof(float), 1, file);
 
-        float len = 0;
-        for (a = 0; a < size; a++)
-            len += M[a + b * size] * M[a + b * size];
-
-        len = sqrt(len);
-
-        for (a = 0; a < size; a++)
-            M[a + b * size] /= len;
-
         // Insertion du mot dans l'arbre
-        dictionary = insert(dictionary, vocab + b * max_w, ftell(file));
         //printf("%s %i\n",vocab + b * max_w,ftell(file));
     }
     // printPrefix(dictionary);
@@ -462,7 +454,7 @@ int searchWordInStaticTree(StaticTreeWithOffset *st, const char *word)
 /*
     =======================================
 
-            Prototype des fonctions
+            fonctions
             Calculer Similarité
 
     =======================================
@@ -577,24 +569,26 @@ double levenshtein(char * S, char * T) {
  * @return double Produit scalaire normalisé entre -1 et 1.
  */
 double calculScalaire(int offsetword1,int offsetword2){ 
-    FILE *file = fopen("datafiles/word.bin", "rb");
+    FILE *file = fopen("datafiles/words.bin", "rb");
     if (!file)
     {
         perror("Erreur lors de l'ouverture du fichier Word2Vec");
         exit(ERROR_FILE_NOT_FOUND);
     }
-    float vecteur1[MAX_SIZE];
-    float vecteur2[MAX_SIZE];
+    float *vecteur1 = malloc(MAX_SIZE * sizeof(float));
+    float *vecteur2 = malloc(MAX_SIZE * sizeof(float));
     int a;
 
     //inspiré du code de distance.c
     fseek(file,offsetword1,SEEK_SET);
     for (a = 0; a < MAX_SIZE; a++){
         fread(&vecteur1[a], sizeof(float), 1, file);
+        //printf("%f\t",vecteur1[a]);
     }
     fseek(file,offsetword2,SEEK_SET);
     for (a = 0; a < MAX_SIZE; a++){
         fread(&vecteur2[a], sizeof(float), 1, file);
+        //printf("%f\t",vecteur2[a]);
     }
 
     double len1 = 0;
@@ -628,18 +622,14 @@ double calculScalaire(int offsetword1,int offsetword2){
  * @return double Score de similarité normalisé entre 0 et 1.
  */
 double calculSimilarity(char *word1, char *word2, int offset1, int offset2){
-    double score;
     double calcul = max(levenshtein(word1,word2),calculScalaire(offset1,offset2));
-    if (calcul >= 0 && calcul <= 1){
-        return levenshtein(word1,word2);
-    }
-    return score;
+    return calcul;
 }
 
 /*
     =======================================
 
-            Prototype des fonctions
+            fonctions
             FICHIERS DE PARTIE
 
     =======================================

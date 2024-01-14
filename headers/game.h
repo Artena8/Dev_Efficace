@@ -13,7 +13,7 @@
 
 // Constantes
 #define NONE -1
-#define MAX_SIZE 500
+#define MAX_SIZE 300
 #define MAX_LINE_LENGTH 5000
 
 // Codes Erreurs

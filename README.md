@@ -16,7 +16,7 @@ Le module en C vise à créer et gérer des fichiers de partie pour un jeu basé
 
 ## Installation et lancement
 Tous les fichiers à placer sont dans ./datafiles
-- Le fichier au modèle Word2Vec (words.bin)
+- Le fichier au modèle Word2Vec (words.bin) UTILISER WORDS.bin ou renommer votre fichier words.bin
 - Le dictionnaire lexicographique (dic.lex)
 - le fichier de partie (game.txt)
 
