@@ -13,7 +13,7 @@
 
 // Constantes
 #define NONE -1
-#define MAX_SIZE 300
+#define MAX_SIZE 500
 #define MAX_LINE_LENGTH 5000
 
 // Codes Erreurs
@@ -22,40 +22,6 @@
 #define ERROR_WRITE_FILE 123
 
 #pragma endregion Constantes
-
-#pragma region Levenshtein
-/*
-    =======================================
-
-            Prototype des fonctions
-                Levenshtein
-
-    =======================================
-*/
-
-// Structure pour représenter un tableau associé à l'algorithme de Levenshtein
-typedef struct {
-    int lenS;   // Longueur de la chaîne S
-    int lenT;   // Longueur de la chaîne T
-    int* tab;   // Tableau d'entiers
-} LevArray;
-
-// Fonction pour calculer le minimum de deux entiers
-int min(int a, int b);
-
-// Fonction pour initialiser un tableau pour des chaînes de tailles données
-LevArray init(int lenS, int lenT);
-
-// Fonction pour insérer une valeur dans le tableau
-void set(LevArray a, int indexS, int indexT, int val);
-
-// Fonction pour récupérer une valeur du tableau
-int get(LevArray a, int indexS, int indexT);
-
-// Fonction pour calculer la distance de Levenshtein entre deux chaînes
-double levenshtein(char * S, char * T);
-
-#pragma endregion Levenshtein
 
 #pragma region CSTree
 /*
@@ -138,28 +104,67 @@ StaticTreeWithOffset loadStaticTreeWithOffsetFromFile(FILE* file);
 
 int searchWordInStaticTree(StaticTreeWithOffset* st, const char* word);
 
-double calculScalaire(int offsetword1,int offsetword2);
-
-double sigmoid(double x);
-
-double max(double a, double b);
-
-double calculSimilarity(char *word1, char *word2, int offset1, int offset2);
-
 #pragma endregion Lexico
 
-#pragma region NewGame
+
+#pragma region Similarite
 /*
     =======================================
 
             Prototype des fonctions
-                New Game
+                Similarite
 
     =======================================
 */
 
+// Structure pour représenter un tableau associé à l'algorithme de Levenshtein
+typedef struct {
+    int lenS;   // Longueur de la chaîne S
+    int lenT;   // Longueur de la chaîne T
+    int* tab;   // Tableau d'entiers
+} LevArray;
+
+// Fonction pour calculer le minimum de deux entiers
+int min(int a, int b);
+
+// Fonction pour initialiser un tableau pour des chaînes de tailles données
+LevArray init(int lenS, int lenT);
+
+// Fonction pour insérer une valeur dans le tableau
+void set(LevArray a, int indexS, int indexT, int val);
+
+// Fonction pour récupérer une valeur du tableau
+int get(LevArray a, int indexS, int indexT);
+
+// Fonction pour calculer la distance de Levenshtein entre deux chaînes
+double levenshtein(char * S, char * T);
+
+// Fonction pour calculer la distance semantique
+double calculScalaire(int offsetword1,int offsetword2);
+
+// Fonction pour calculer le maximum de deux entiers
+double max(double a, double b);
+
+// Assembler levenstein et calculScalaire pour retourner la similarite max de deux mots
+double calculSimilarity(char *word1, char *word2, int offset1, int offset2);
+
+#pragma endregion Similarite
+
+#pragma region NewGame
+
+/*
+    =======================================
+
+            Prototype des fonctions
+                Fichiers de partie
+
+    =======================================
+*/
+
+// Ecris le fichier de partie
 void writeToFileBeginGame(char *filename, char *word1, char *word2, int offset1, int offset2);
 
+// Ajoute un mot au fichier de partie
 void addWordToFile(char *filename, char *word1, int offset1);
 
 #pragma endregion  NewGame

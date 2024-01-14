@@ -1,4 +1,4 @@
-normoxie;attribution
 cri;lapin
-normoxie:73451952;attribution:4562942;cri:5503223;lapin:4888444
-normoxie,attribution,0.18;cri,normoxie,0.00;cri,attribution,0.00;lapin,normoxie,0.00;lapin,attribution,0.00;lapin,cri,0.00;
+lèvre
+cri:5503223;lapin:4888444;lèvre:11920592
+cri,lapin,0.00;lèvre,cri,0.20;lèvre,lapin,0.00;

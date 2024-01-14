@@ -8,9 +8,18 @@
 #include <assert.h>
 #include "../headers/game.h"
 
+
+/*
+    =======================================
+
+            Prototype des fonctions
+            Construction d'un CSTREE
+
+    =======================================
+*/
+
 // Q1 Alloue un nouveau noeud pour un CSTree
-CSTree newCSTree(Element elem, CSTree firstChild, CSTree nextSibling, int offset)
-{
+CSTree newCSTree(Element elem, CSTree firstChild, CSTree nextSibling, int offset){
     CSTree t = malloc(sizeof(Node));
     if (t == NULL)
         exit(EXIT_FAILURE);
@@ -22,23 +31,20 @@ CSTree newCSTree(Element elem, CSTree firstChild, CSTree nextSibling, int offset
 }
 
 // Q4 Compte le nombre de noeuds dans l’arbre t.
-int size(CSTree t)
-{
+int size(CSTree t){
     if (t == NULL)
         return 0;
     return 1 + size(t->firstChild) + size(t->nextSibling);
 }
 
 // Q5 Compte le nombre d’enfants du nœud t.
-int nSiblings(CSTree child)
-{
+int nSiblings(CSTree child){
     if (child == NULL)
         return 0;
     return nSiblings(child->nextSibling) + 1;
 }
 
-int nChildren(CSTree t)
-{
+int nChildren(CSTree t){
     if (t == NULL || t->firstChild == NULL)
         return 0;
     return nSiblings(t->firstChild);
@@ -46,8 +52,7 @@ int nChildren(CSTree t)
 
 // Q8 on suppose que les frères de *t sont triés par ordre croissant.
 //    Renvoie le premier frère de *t contenant e, un nouveau noeud est créé si absent
-CSTree sortContinue(CSTree *t, Element e, int offset)
-{
+CSTree sortContinue(CSTree *t, Element e, int offset){
     if (*t != NULL && (*t)->elem < e)
         return sortContinue(&((*t)->nextSibling), e, offset);
     else if (*t != NULL && (*t)->elem == e)
@@ -63,16 +68,12 @@ CSTree sortContinue(CSTree *t, Element e, int offset)
 //     renvoie la position de cet élément s’il existe, NONE sinon.
 //     Si len=NONE, parcourir la cellule from et tous ses frères suivants
 //     cette fonction peut être itérative
-int siblingLookupStatic(StaticTreeWithOffset *st, Element e, int from, int len)
-{
-    if (len == NONE)
-    {
+int siblingLookupStatic(StaticTreeWithOffset *st, Element e, int from, int len){
+    if (len == NONE){
         len = st->nodeArray[from].nSiblings + 1;
         //printf("Lettre %c nsblings : %d\n", st->nodeArray[from].elem, len);
     }
-
-    for (int i = from; i < from + len; i++)
-    {
+    for (int i = from; i < from + len; i++){
         //printf("searched : %c = %c ", st->nodeArray[i].elem, e);
         //printf(" equal : %i\n", e == st->nodeArray[i].elem);
         if (st->nodeArray[i].elem == e)
@@ -81,7 +82,6 @@ int siblingLookupStatic(StaticTreeWithOffset *st, Element e, int from, int len)
             return st->nodeArray[i].firstChild;
         }
     }
-
     return NONE;
 }
 
@@ -294,7 +294,7 @@ CSTree buildWord2VecDictionaryFromFile(const char *filename)
 
         // Insertion du mot dans l'arbre
         dictionary = insert(dictionary, vocab + b * max_w, ftell(file));
-        // printf("%s %i\n",vocab + b * max_w,ftell(file));
+        //printf("%s %i\n",vocab + b * max_w,ftell(file));
     }
     // printPrefix(dictionary);
     fclose(file);
@@ -357,53 +357,14 @@ int searchWordInStaticTree(StaticTreeWithOffset *st, const char *word)
     }
 }
 
+/*
+    =======================================
 
-double sigmoid(double x)
-{
-    return 100.0 / (1.0 + exp(-x));
-}
+            Prototype des fonctions
+            Calculer Similarité
 
-double calculScalaire(int offsetword1,int offsetword2){ 
-    FILE *file = fopen("datafiles/words.bin", "rb");
-    if (!file)
-    {
-        perror("Erreur lors de l'ouverture du fichier Word2Vec");
-        exit(ERROR_FILE_NOT_FOUND);
-    }
-    float vecteur1[MAX_SIZE];
-    float vecteur2[MAX_SIZE];
-    int a;
-
-    //inspiré du code de distance.c
-    fseek(file,offsetword1,SEEK_SET);
-    for (a = 0; a < MAX_SIZE; a++){
-        fread(&vecteur1[a], sizeof(float), 1, file);
-    }
-    fseek(file,offsetword2,SEEK_SET);
-    for (a = 0; a < MAX_SIZE; a++){
-        fread(&vecteur2[a], sizeof(float), 1, file);
-    }
-
-    double len1 = 0;
-    double len2 = 0;
-    double produit = 0;
-
-    for (a = 0; a < MAX_SIZE; a++){
-        len1 += vecteur1[a] * vecteur1[a];
-    } 
-    for (a = 0; a < MAX_SIZE; a++){
-        len2 += vecteur2[a] * vecteur2[a];
-    } 
-    
-    // Norme vecteurs
-    len1 = sqrt(len1); //Norme U
-    len2 = sqrt(len2); //Norme V
-    for (a = 0; a < MAX_SIZE; a++) produit += vecteur1[a] * vecteur2[a];
-
-    //printf("len1: %f, len2: %f produit: %f\n", len1, len2, produit);
-    //printf("score: %0.2f\n", (produit / (len1 * len2)));
-    return produit / (len1 * len2);
-}
+    =======================================
+*/
 
 //minimum de deux entiers
 int min(int a, int b) {
@@ -469,6 +430,49 @@ double levenshtein(char * S, char * T) {
     return (1.0 - ((double)distance / max));
 }
 
+
+double calculScalaire(int offsetword1,int offsetword2){ 
+    FILE *file = fopen("datafiles/word.bin", "rb");
+    if (!file)
+    {
+        perror("Erreur lors de l'ouverture du fichier Word2Vec");
+        exit(ERROR_FILE_NOT_FOUND);
+    }
+    float vecteur1[MAX_SIZE];
+    float vecteur2[MAX_SIZE];
+    int a;
+
+    //inspiré du code de distance.c
+    fseek(file,offsetword1,SEEK_SET);
+    for (a = 0; a < MAX_SIZE; a++){
+        fread(&vecteur1[a], sizeof(float), 1, file);
+    }
+    fseek(file,offsetword2,SEEK_SET);
+    for (a = 0; a < MAX_SIZE; a++){
+        fread(&vecteur2[a], sizeof(float), 1, file);
+    }
+
+    double len1 = 0;
+    double len2 = 0;
+    double produit = 0;
+
+    for (a = 0; a < MAX_SIZE; a++){
+        len1 += vecteur1[a] * vecteur1[a];
+    } 
+    for (a = 0; a < MAX_SIZE; a++){
+        len2 += vecteur2[a] * vecteur2[a];
+    } 
+    
+    // Norme vecteurs
+    len1 = sqrt(len1); //Norme U
+    len2 = sqrt(len2); //Norme V
+    for (a = 0; a < MAX_SIZE; a++) produit += vecteur1[a] * vecteur2[a];
+
+    //printf("len1: %f, len2: %f produit: %f\n", len1, len2, produit);
+    //printf("score: %0.2f\n", (produit / (len1 * len2)));
+    return produit / (len1 * len2);
+}
+
 double calculSimilarity(char *word1, char *word2, int offset1, int offset2){
     double score;
     double calcul = max(levenshtein(word1,word2),calculScalaire(offset1,offset2));
@@ -477,6 +481,16 @@ double calculSimilarity(char *word1, char *word2, int offset1, int offset2){
     }
     return score;
 }
+
+/*
+    =======================================
+
+            Prototype des fonctions
+            FICHIERS DE PARTIE
+
+    =======================================
+*/
+
 
 void writeToFileBeginGame(char *filename, char *word1, char *word2, int offset1, int offset2) {
     FILE *file = fopen(filename, "w");
@@ -558,7 +572,7 @@ void addWordToFile(char *filename, char *word1, int offset1) {
     char *listemots[500];
     char *token;
     int i = 0;
-
+    // Ici on split les mots de la ligne 1 pour les mettre dans une liste
     token = strtok(line1, ";");
     while(token != NULL){
         listemots[i] = token;

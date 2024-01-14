@@ -1,37 +1,17 @@
-# Dev_Efficace
-Dossier pour travailler de manière expérimentale sur la SAE - moteur de score
+# Bienvenue dans la partie moteur de jeu de Links Awordkenning : Where Worlds 
 
-## Compilation
+##  Technologies utilisées pour ce module
+[![My Skills](https://skillicons.dev/icons?i=c)](https://skillicons.dev)
+[![My Skills](https://skillicons.dev/icons?i=github)](https://skillicons.dev)
+Avec l'utilisation de l'API Word2Vec
 
-- **Compiler Lev_similarity**
-    <br>Windows :
-    ```
-    C:\MinGW\bin> .\gcc.exe "Modules Dones\lev_similarity.c" "Modules Dones\levenstein.c" -o "Modules Dones\lev_similarity.exe"
-    ```
-    Linux :
-    ```
-    gcc "./Modules Dones/lev_similarity.c" "./Modules Dones/levenstein.c" -o "./Modules Dones/lev_similarity"
-    ```
-- 
+## Objectif de ce module
+Le module en C vise à créer et gérer des fichiers de partie pour un jeu basé sur la similarité sémantique et orthographique entre des mots. Il utilise un dictionnaire Word2Vec, optimisé avec un index lexicographique, pour calculer la similarité entre les mots. Le fichier de partie enregistre les informations essentielles du jeu, permettant l'ajout de mots et le suivi des distances entre eux. L'algorithme utilise la distance de Levenshtein pour la similarité orthographique et ajuste le score de similarité sémantique pour comparaison.
 
-## Creer le dictionnaire de l'arbre lexicographique (build_index_lex)
-gcc "./sourcefiles/build_index_lex.c" "./sourcefiles/functions.c" -I"./headers" -lm -o "./exec_WINDOWS/build_index_lex"
+## Installation et lancement
+Tous les fichiers à placer sont dans ./datafiles
+- Le fichier au modèle Word2Vec (words.bin)
+- Le dictionnaire lexicographique (dic.lex)
+- le fichier de partie (game.txt)
 
-./gcc.exe "U:\GITHUB\Dev_Efficace/sourcefiles/build_index_lex.c" "U:\GITHUB\Dev_Efficace/sourcefiles/functions.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace/exec_WINDOWS/build_index_lex"
-
-## Rechercher si un mot existe dans le dictionnaire (dictionnary_lookup)
-gcc "./sourcefiles/dictionary_lookup.c" "./sourcefiles/functions.c" -I"./headers" -lm -o "./exec_WINDOWS/dictionary_lookup"
-
-./gcc.exe "U:\GITHUB\Dev_Efficace/sourcefiles/dictionary_lookup.c" "U:\GITHUB\Dev_Efficace/sourcefiles/functions.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace/exec_WINDOWS/dictionary_lookup"
-
-## Calculer la similarite orthographique (lev_similarity)
-.\gcc.exe "U:\GITHUB\Dev_Efficace\sourcefiles\lev_similarity.c" "U:\GITHUB\Dev_Efficace/sourcefiles/functions.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace\exec_WINDOWS\lev_similarity.exe"
-
-## Calculer la similarite semantique (sem_similarity)
-./gcc.exe "U:\GITHUB\Dev_Efficace/sourcefiles/sem_similarity.c" "U:\GITHUB\Dev_Efficace/sourcefiles/functions.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace/exec_WINDOWS/sem_similarity"
-
-## Creer le fichier de partie (new_game)
-./gcc.exe "U:\GITHUB\Dev_Efficace/sourcefiles/new_game.c" "U:\GITHUB\Dev_Efficace/sourcefiles/functions.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace/exec_WINDOWS/new_game"
-
-## Ajouter un mot à la partie (add_word)
-./gcc.exe "U:\GITHUB\Dev_Efficace/sourcefiles/add_word.c" "U:\GITHUB\Dev_Efficace/sourcefiles/functions.c" -I"./headers" -lm -o "U:\GITHUB\Dev_Efficace/exec_WINDOWS/add_word"
+Consultez le [MakeFile.md](./MakeFile.md) pour la génération des commandes
