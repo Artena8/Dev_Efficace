@@ -18,7 +18,15 @@
     =======================================
 */
 
-// Q1 Alloue un nouveau noeud pour un CSTree
+/**
+ * @brief Alloue un nouveau noeud pour un CSTree.
+ * 
+ * @param elem Valeur de l'élément du noeud.
+ * @param firstChild Premier enfant du noeud.
+ * @param nextSibling Prochain frère du noeud.
+ * @param offset Offset associé au noeud.
+ * @return CSTree Nouveau noeud alloué.
+ */
 CSTree newCSTree(Element elem, CSTree firstChild, CSTree nextSibling, int offset){
     CSTree t = malloc(sizeof(Node));
     if (t == NULL)
@@ -30,28 +38,51 @@ CSTree newCSTree(Element elem, CSTree firstChild, CSTree nextSibling, int offset
     return t;
 }
 
-// Q4 Compte le nombre de noeuds dans l’arbre t.
+/**
+ * @brief Compte le nombre de noeuds dans l'arbre t.
+ * 
+ * @param t Arbre dont on veut calculer la taille.
+ * @return int Nombre de noeuds dans l'arbre.
+ */
 int size(CSTree t){
     if (t == NULL)
         return 0;
     return 1 + size(t->firstChild) + size(t->nextSibling);
 }
 
-// Q5 Compte le nombre d’enfants du nœud t.
+/**
+ * @brief Compte le nombre de frères du nœud child.
+ * 
+ * @param child Noeud dont on veut compter les frères.
+ * @return int Nombre de frères du nœud.
+ */
 int nSiblings(CSTree child){
     if (child == NULL)
         return 0;
     return nSiblings(child->nextSibling) + 1;
 }
 
+/**
+ * @brief Compte le nombre d'enfants du nœud t.
+ * 
+ * @param t Noeud dont on veut compter les enfants.
+ * @return int Nombre d'enfants du nœud.
+ */
 int nChildren(CSTree t){
     if (t == NULL || t->firstChild == NULL)
         return 0;
     return nSiblings(t->firstChild);
 }
 
-// Q8 on suppose que les frères de *t sont triés par ordre croissant.
-//    Renvoie le premier frère de *t contenant e, un nouveau noeud est créé si absent
+/**
+ * @brief Renvoie le premier frère de *t contenant e.
+ *        Un nouveau noeud est créé s'il est absent.
+ * 
+ * @param t Pointeur vers le noeud.
+ * @param e Valeur de l'élément recherché.
+ * @param offset Offset associé au nouveau noeud s'il est créé.
+ * @return CSTree Premier frère contenant l'élément e.
+ */
 CSTree sortContinue(CSTree *t, Element e, int offset){
     if (*t != NULL && (*t)->elem < e)
         return sortContinue(&((*t)->nextSibling), e, offset);
@@ -64,10 +95,18 @@ CSTree sortContinue(CSTree *t, Element e, int offset){
     }
 }
 
-// Q9 Recherche l’élément e parmi les éléments consécutifs de t aux positions from,..., from+len-1,
-//     renvoie la position de cet élément s’il existe, NONE sinon.
-//     Si len=NONE, parcourir la cellule from et tous ses frères suivants
-//     cette fonction peut être itérative
+/**
+ * @brief Recherche l'élément e parmi les éléments consécutifs de t aux positions from,..., from+len-1.
+ *        Renvoie la position de cet élément s'il existe, NONE sinon.
+ *        Si len=NONE, parcourir la cellule from et tous ses frères suivants.
+ *        Cette fonction peut être itérative.
+ * 
+ * @param st Structure StaticTreeWithOffset contenant un tableau de nœuds.
+ * @param e Valeur de l'élément recherché.
+ * @param from Position de départ dans le tableau.
+ * @param len Nombre d'éléments à rechercher à partir de la position de départ.
+ * @return int Position de l'élément s'il est trouvé, NONE sinon.
+ */
 int siblingLookupStatic(StaticTreeWithOffset *st, Element e, int from, int len){
     if (len == NONE){
         len = st->nodeArray[from].nSiblings + 1;
@@ -95,6 +134,12 @@ int siblingLookupStatic(StaticTreeWithOffset *st, Element e, int from, int len){
     =======================================
 */
 
+/**
+ * @brief Retourne la longueur en octets d'un caractère UTF-8 à partir de son premier octet.
+ * 
+ * @param first_byte Premier octet du caractère UTF-8.
+ * @return int Longueur en octets du caractère UTF-8. -1 si le format est invalide.
+ */
 int utf8_char_length(unsigned char first_byte)
 {
     if ((first_byte & 0x80) == 0)
@@ -120,6 +165,13 @@ int utf8_char_length(unsigned char first_byte)
     }
 }
 
+/**
+ * @brief Convertit un caractère UTF-8 en un caractère large (wchar_t).
+ * 
+ * @param word Pointeur vers le premier octet du caractère UTF-8.
+ * @param char_length Longueur en octets du caractère UTF-8.
+ * @return wchar_t Caractère large résultant de la conversion.
+ */
 wchar_t convertUtf8(wchar_t *word, int char_length)
 {
     wchar_t combinedWord;
@@ -133,13 +185,20 @@ wchar_t convertUtf8(wchar_t *word, int char_length)
     }
     else
     {
-        // Gérer les autres longueurs de caractères UTF-8 si nécessaire
-        return NULL;
+        combinedWord = L'\0';
     }
     return combinedWord;
 }
 
-// Modifier la déclaration pour que la fonction renvoie void
+
+/**
+ * @brief Insère un mot dans un arbre CSTree.
+ * 
+ * @param t Arbre dans lequel insérer le mot.
+ * @param mot Mot à insérer.
+ * @param offset Offset associé au mot.
+ * @return CSTree Arbre mis à jour après l'insertion.
+ */
 CSTree insert(CSTree t, const char *mot, int offset)
 {
     CSTree currentNode = t;
@@ -168,7 +227,15 @@ CSTree insert(CSTree t, const char *mot, int offset)
     return t;
 }
 
-// Exportation de l'arbre lexicographique dans un fichier .lex
+/**
+ * @brief Remplit un tableau de cellules d'arbre statique avec les informations d'un arbre CSTree.
+ * 
+ * @param st Structure StaticTreeWithOffset à remplir.
+ * @param t Arbre CSTree source.
+ * @param index_for_t Index de départ dans le tableau.
+ * @param nSiblings Nombre de frères du nœud actuel.
+ * @param reserved_cells Pointeur vers le nombre de cellules réservées.
+ */
 void fill_array_cells_with_offset(StaticTreeWithOffset *st, CSTree t, int index_for_t, int nSiblings, int *reserved_cells)
 {
     if (t == NULL)
@@ -197,6 +264,12 @@ void fill_array_cells_with_offset(StaticTreeWithOffset *st, CSTree t, int index_
     }
 }
 
+/**
+ * @brief Exporte un arbre CSTree vers une structure StaticTreeWithOffset.
+ * 
+ * @param t Arbre CSTree à exporter.
+ * @return StaticTreeWithOffset Structure statique résultante.
+ */
 StaticTreeWithOffset exportStaticTreeWithOffset(CSTree t)
 {
     StaticTreeWithOffset st = {NULL, 0};
@@ -222,6 +295,12 @@ StaticTreeWithOffset exportStaticTreeWithOffset(CSTree t)
     return st;
 }
 
+/**
+ * @brief Exporte une structure StaticTreeWithOffset vers un fichier binaire.
+ * 
+ * @param st Structure StaticTreeWithOffset à exporter.
+ * @param filename Nom du fichier de destination.
+ */
 void exportStaticTreeWithOffsetToFile(StaticTreeWithOffset *st, const char *filename)
 {
     FILE *file = fopen(filename, "wb");
@@ -237,6 +316,12 @@ void exportStaticTreeWithOffsetToFile(StaticTreeWithOffset *st, const char *file
     fclose(file);
 }
 
+/**
+ * @brief Construit un dictionnaire Word2Vec à partir d'un fichier binaire.
+ * 
+ * @param filename Nom du fichier binaire Word2Vec.
+ * @return CSTree Arbre CSTree représentant le dictionnaire Word2Vec.
+ */
 CSTree buildWord2VecDictionaryFromFile(const char *filename)
 {
     CSTree dictionary = newCSTree('@', NULL, NULL, -1);
@@ -305,13 +390,24 @@ CSTree buildWord2VecDictionaryFromFile(const char *filename)
     return dictionary;
 }
 
+/**
+ * @brief Exporte un arbre CSTree vers un fichier binaire représentant l'arbre statique.
+ * 
+ * @param t Arbre CSTree à exporter.
+ * @param filename Nom du fichier de destination.
+ */
 void exportTreeToFile(CSTree t, const char *filename)
 {
     StaticTreeWithOffset st = exportStaticTreeWithOffset(t);
     exportStaticTreeWithOffsetToFile(&st, filename);
 }
 
-
+/**
+ * @brief Charge une structure StaticTreeWithOffset depuis un fichier binaire.
+ * 
+ * @param file Fichier binaire contenant la structure à charger.
+ * @return StaticTreeWithOffset Structure chargée depuis le fichier.
+ */
 StaticTreeWithOffset loadStaticTreeWithOffsetFromFile(FILE *file)
 {
     StaticTreeWithOffset st;
@@ -330,7 +426,13 @@ StaticTreeWithOffset loadStaticTreeWithOffsetFromFile(FILE *file)
     return st;
 }
 
-// Recherche un mot dans le StaticTree
+/**
+ * @brief Recherche un mot dans un arbre statique.
+ * 
+ * @param st Structure StaticTreeWithOffset dans laquelle effectuer la recherche.
+ * @param word Mot à rechercher.
+ * @return int Offset associé au mot s'il est trouvé, -1 sinon.
+ */
 int searchWordInStaticTree(StaticTreeWithOffset *st, const char *word)
 {
     int i = 0;
@@ -366,17 +468,35 @@ int searchWordInStaticTree(StaticTreeWithOffset *st, const char *word)
     =======================================
 */
 
-//minimum de deux entiers
+/**
+ * @brief Retourne le minimum entre deux entiers.
+ * 
+ * @param a Premier entier.
+ * @param b Deuxième entier.
+ * @return int Le minimum entre a et b.
+ */
 int min(int a, int b) {
     return a < b ? a : b;
 }
 
-// maximum de deux valeurs en double
+/**
+ * @brief Retourne le maximum entre deux valeurs en double.
+ * 
+ * @param a Première valeur.
+ * @param b Deuxième valeur.
+ * @return double Le maximum entre a et b.
+ */
 double max(double a, double b) {
     return a > b ? a : b;
 }
 
-//initialiser un tableau pour des chaînes d'une taille donnée
+/**
+ * @brief Initialise un tableau pour des chaînes d'une taille donnée.
+ * 
+ * @param lenS Taille de la première chaîne.
+ * @param lenT Taille de la deuxième chaîne.
+ * @return LevArray Structure LevArray initialisée.
+ */
 LevArray init(int lenS, int lenT) {
     LevArray a;
     a.lenS = lenS;
@@ -386,15 +506,28 @@ LevArray init(int lenS, int lenT) {
     return a;
 }
 
-//set: insérer une valeur dans le tableau
+/**
+ * @brief Insère une valeur dans le tableau LevArray.
+ * 
+ * @param a Structure LevArray.
+ * @param indexS Indice de la première chaîne.
+ * @param indexT Indice de la deuxième chaîne.
+ * @param val Valeur à insérer.
+ */
 void set(LevArray a, int indexS, int indexT, int val) {
     assert(indexS >= 0 && indexS < a.lenS && indexT >= 0 && indexT < a.lenT);
     assert(a.tab!=NULL); 
     a.tab[indexT * a.lenS + indexS] = val;
 }
 
-//Q1 get: renvoie la valeur correspondant à des indices donnés
-//   i+1 pour les requêtes du type get(a, -1, i) ou get (a, i, -1)
+/**
+ * @brief Renvoie la valeur correspondant à des indices donnés dans le tableau LevArray.
+ * 
+ * @param a Structure LevArray.
+ * @param indexS Indice de la première chaîne.
+ * @param indexT Indice de la deuxième chaîne.
+ * @return int Valeur du tableau LevArray.
+ */
 int get(LevArray a, int indexS, int indexT) {
     if (indexS == -1) {
         return indexT + 1;
@@ -407,7 +540,13 @@ int get(LevArray a, int indexS, int indexT) {
     }
 }
 
-//Q2 levenshtein: calcule la distance de levenshtein de deux chaînes
+/**
+ * @brief Calcule la distance de Levenshtein entre deux chaînes.
+ * 
+ * @param S Première chaîne.
+ * @param T Deuxième chaîne.
+ * @return double Distance de Levenshtein normalisée entre 0 et 1.
+ */
 double levenshtein(char * S, char * T) {
     LevArray a = init(strlen(S), strlen(T));
     
@@ -430,7 +569,13 @@ double levenshtein(char * S, char * T) {
     return (1.0 - ((double)distance / max));
 }
 
-
+/**
+ * @brief Calcule le produit scalaire normalisé entre deux vecteurs.
+ * 
+ * @param offsetword1 Offset du premier mot dans le fichier Word2Vec.
+ * @param offsetword2 Offset du deuxième mot dans le fichier Word2Vec.
+ * @return double Produit scalaire normalisé entre -1 et 1.
+ */
 double calculScalaire(int offsetword1,int offsetword2){ 
     FILE *file = fopen("datafiles/word.bin", "rb");
     if (!file)
@@ -473,11 +618,20 @@ double calculScalaire(int offsetword1,int offsetword2){
     return produit / (len1 * len2);
 }
 
+/**
+ * @brief Calcule la similarité entre deux mots ou vecteurs.
+ * 
+ * @param word1 Premier mot ou chaîne.
+ * @param word2 Deuxième mot ou chaîne.
+ * @param offset1 Offset du premier mot dans le fichier Word2Vec.
+ * @param offset2 Offset du deuxième mot dans le fichier Word2Vec.
+ * @return double Score de similarité normalisé entre 0 et 1.
+ */
 double calculSimilarity(char *word1, char *word2, int offset1, int offset2){
     double score;
     double calcul = max(levenshtein(word1,word2),calculScalaire(offset1,offset2));
     if (calcul >= 0 && calcul <= 1){
-        return calcul;
+        return levenshtein(word1,word2);
     }
     return score;
 }
@@ -491,19 +645,34 @@ double calculSimilarity(char *word1, char *word2, int offset1, int offset2){
     =======================================
 */
 
-
+/**
+ * @brief Écrit les informations initiales du jeu dans un fichier.
+ * 
+ * @param filename Nom du fichier.
+ * @param word1 Premier mot.
+ * @param word2 Deuxième mot.
+ * @param offset1 Offset du premier mot dans le fichier Word2Vec.
+ * @param offset2 Offset du deuxième mot dans le fichier Word2Vec.
+ */
 void writeToFileBeginGame(char *filename, char *word1, char *word2, int offset1, int offset2) {
     FILE *file = fopen(filename, "w");
     
-    fprintf(file, "%s;%s", word1,word2);
-    fprintf(file, "\n\n");
-    fprintf(file, "%s:%i;%s:%i", word1, offset1,word2,offset2);
-    fprintf(file, "\n");
-    fprintf(file, "%s,%s,%0.2f;", word1, word2, calculSimilarity(word1,word2,offset1,offset2));
+    fprintf(file, "%s;%s", word1,word2); //line 1
+    fprintf(file, "\n\n"); //line 2 vide car 0 mot ajouté
+    fprintf(file, "%s:%i;%s:%i", word1, offset1,word2,offset2); // line 3
+    fprintf(file, "\n"); 
+    fprintf(file, "%s,%s,%0.2f;", word1, word2, calculSimilarity(word1,word2,offset1,offset2)); //line 4
 
     fclose(file);
 }
 
+/**
+ * @brief Ajoute un mot et ses informations à un fichier existant.
+ * 
+ * @param filename Nom du fichier.
+ * @param word1 Mot à ajouter.
+ * @param offset1 Offset du mot dans le fichier Word2Vec.
+ */
 void addWordToFile(char *filename, char *word1, int offset1) {
     FILE *file = fopen(filename, "r+");
     if (!file) {

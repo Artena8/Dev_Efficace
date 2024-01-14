@@ -82,26 +82,28 @@ int siblingLookupStatic(StaticTreeWithOffset* st, Element e, int from, int len);
     =======================================
 */
 
-struct vocab_word {
-  long long cn;
-  int *point;
-  char *word, *code, codelen;
-};
-
+// Inserer un mot de Word2Vec dans le CSTree
 CSTree insert(CSTree t, const char* mot, int offset);
 
+// Fonction pour convertir CSTree en StaticTree : Remplir les cells du tableau
 void fill_array_cells_with_offset(StaticTreeWithOffset* st, CSTree t, int index_for_t, int nSiblings, int* reserved_cells) ;
 
+// Fonction pour créer le CSTree depuis un .bin
 CSTree buildWord2VecDictionaryFromFile(const char *filename);
 
+// Rend le CSTree en StaticTree
 StaticTreeWithOffset exportStaticTreeWithOffset(CSTree t);
 
-void exportTreeToFile(CSTree t, const char *filename);
-
+// Pour exporter le StaticTree en fichier .lex
 void exportStaticTreeWithOffsetToFile(StaticTreeWithOffset* st, const char* filename);
 
+// Converti le CSTREE en StaticTree puis l'envoit en fichier
+void exportTreeToFile(CSTree t, const char *filename);
+
+// Pour charger l'arbre de son .lex afin de l'utiliser
 StaticTreeWithOffset loadStaticTreeWithOffsetFromFile(FILE* file);
 
+// Pour chercher un mot dans l'arbre lexicographique
 int searchWordInStaticTree(StaticTreeWithOffset* st, const char* word);
 
 #pragma endregion Lexico
