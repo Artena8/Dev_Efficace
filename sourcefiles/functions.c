@@ -113,7 +113,6 @@ int siblingLookupStatic(StaticTreeWithOffset *st, Element e, int from, int len){
         //printf("Lettre %c nsblings : %d\n", st->nodeArray[from].elem, len);
     }
     for (int i = from; i < from + len; i++){
-        //printf("searched : %c = %c ", st->nodeArray[i].elem, e);
         //printf(" equal : %i\n", e == st->nodeArray[i].elem);
         if (st->nodeArray[i].elem == e)
         {
@@ -133,64 +132,6 @@ int siblingLookupStatic(StaticTreeWithOffset *st, Element e, int from, int len){
 
     =======================================
 */
-
-/**
- * @brief Retourne la longueur en octets d'un caractère UTF-8 à partir de son premier octet.
- * 
- * @param first_byte Premier octet du caractère UTF-8.
- * @return int Longueur en octets du caractère UTF-8. -1 si le format est invalide.
- */
-int utf8_char_length(unsigned char first_byte)
-{
-    if ((first_byte & 0x80) == 0)
-    {
-        return 1;
-    }
-    else if ((first_byte & 0xE0) == 0xC0)
-    {
-        return 2;
-    }
-    else if ((first_byte & 0xF0) == 0xE0)
-    {
-        return 3;
-    }
-    else if ((first_byte & 0xF8) == 0xF0)
-    {
-        return 4;
-    }
-    else
-    {
-        // Invalid UTF-8
-        return -1;
-    }
-}
-
-/**
- * @brief Convertit un caractère UTF-8 en un caractère large (wchar_t).
- * 
- * @param word Pointeur vers le premier octet du caractère UTF-8.
- * @param char_length Longueur en octets du caractère UTF-8.
- * @return wchar_t Caractère large résultant de la conversion.
- */
-wchar_t convertUtf8(wchar_t *word, int char_length)
-{
-    wchar_t combinedWord;
-    if (char_length == 1)
-    {
-        combinedWord = (wchar_t)(*word);
-    }
-    else if (char_length == 2)
-    {
-        combinedWord = ((wchar_t)(*word & 0x1F) << 6) | (wchar_t)(*(word + 1) & 0x3F);
-    }
-    else
-    {
-        combinedWord = L'\0';
-    }
-    return combinedWord;
-}
-
-
 /**
  * @brief Insère un mot dans un arbre CSTree.
  * 
@@ -202,24 +143,18 @@ wchar_t convertUtf8(wchar_t *word, int char_length)
 CSTree insert(CSTree t, const char *mot, int offset)
 {
     CSTree currentNode = t;
-    wchar_t wideMot[50];
-    mbstowcs(wideMot, mot, 50);
-    wchar_t wide; 
 
-    for (int i = 0; wideMot[i] != '\0'; i++)
+    for (int i = 0; mot[i] != '\0'; i++)
     {
-        int char_length = utf8_char_length(wideMot[i]);
-        wide = convertUtf8(&wideMot[i], char_length);
 
         if (i == 0)
         {
-            currentNode = sortContinue(&currentNode, towlower(wide), -1);
+            currentNode = sortContinue(&currentNode, towlower(mot[i]), -1);
         }
         else
         {
-            currentNode = sortContinue(&(currentNode->firstChild), towlower(wide), -1);
+            currentNode = sortContinue(&(currentNode->firstChild), towlower(mot[i]), -1);
         }
-        i += char_length - 1;
     }
 
     currentNode->firstChild = sortContinue(&(currentNode->firstChild), '\0', offset);
@@ -316,6 +251,7 @@ void exportStaticTreeWithOffsetToFile(StaticTreeWithOffset *st, const char *file
     fclose(file);
 }
 
+
 /**
  * @brief Construit un dictionnaire Word2Vec à partir d'un fichier binaire.
  * 
@@ -346,7 +282,7 @@ CSTree buildWord2VecDictionaryFromFile(const char *filename)
     vocab = (char *)malloc(words * max_w * sizeof(char));
     M = (float *)malloc(words * size * sizeof(float));
 
-    if (vocab == NULL || M == NULL)
+    if (vocab == NULL)
     {
         printf("Erreur lors de l'allocation mémoire pour le dictionnaire Word2Vec\n");
         exit(EXIT_FAILURE);
@@ -432,8 +368,7 @@ int searchWordInStaticTree(StaticTreeWithOffset *st, const char *word)
     wchar_t wide; 
     do
     {
-        mbstowcs(&wide, &word[i], 1);
-        from = siblingLookupStatic(st, wide, from, NONE);
+        from = siblingLookupStatic(st, word[i], from, NONE);
         //printf("Debug: i=%d, lowerlettre=%c, from=%d\n", i, wide, from);
         i++;
     } while (word[i] != '\0' && from != NONE);

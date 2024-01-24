@@ -34,7 +34,7 @@
 */
 
 // Définition du type child Sibling Tree (CSTree)
-typedef wchar_t Element;
+typedef char Element;
 
 typedef struct node {
     Element elem;
@@ -83,7 +83,7 @@ int siblingLookupStatic(StaticTreeWithOffset* st, Element e, int from, int len);
 */
 
 // Inserer un mot de Word2Vec dans le CSTree
-CSTree insert(CSTree t, const char* mot, int offset);
+CSTree insert(CSTree tree, const char* mot, int offset);
 
 // Fonction pour convertir CSTree en StaticTree : Remplir les cells du tableau
 void fill_array_cells_with_offset(StaticTreeWithOffset* st, CSTree t, int index_for_t, int nSiblings, int* reserved_cells) ;
